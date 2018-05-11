@@ -20,7 +20,7 @@
 			<li
 				v-for="(val, index) in calendarItem"
 				:key="index"
-				:class="{'cell--active': isActiveCell(index)}"
+				:class="{'cell--active': isActiveCell(index), 'cell--current-month': isCurrentMonth(index)}"
 				@click="changeDay(index)"
 			>
 			{{val}}
@@ -28,14 +28,17 @@
 			</transition-group>
 		</ul>
 	</main>
+	<!-- EventsWindow -->
+	<events-window />
 </div>
 </template>
 
 <script>
 import OrganizerHeader from '@/components/organizer/OrganizerHeader'
+import EventsWindow from '@/components/organizer/events-window/EventsWindow'
 export default {
 	name: 'Main',
-	components: {OrganizerHeader},
+	components: {OrganizerHeader, EventsWindow},
 	data () {
 		return {
 			Date: new Date(),
@@ -78,29 +81,32 @@ export default {
 		positionFirstDay (year, month) {
 			return new Date(year, month).getDay()
 		},
-		//  this.calendarData.selectMonth - 1 предидущий месяц
 		//  positionFirstDay - 1 количество дней до первого дня месяца
 		visibleDaysPrewMonth () {
-			return (this.daysInMonth(this.calendarData.selectYear, (this.calendarData.selectMonth - 1)) - (this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth) - 1))
+			return (this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth) - 1)
+		},
+		//  this.calendarData.selectMonth - 1 предидущий месяц
+		firstVisibleDaysPrewMonth () {
+			return (this.daysInMonth(this.calendarData.selectYear, (this.calendarData.selectMonth - 1)) - this.visibleDaysPrewMonth())
 		},
 		sumDaysPrewCurrentMonth () {
-			let daysPrew = this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth) - 1
+			let daysPrew = this.visibleDaysPrewMonth()
 			let daysCurren = this.daysInMonth(this.calendarData.selectYear, this.calendarData.selectMonth)
 			return daysPrew + daysCurren
 		},
 		createCalendar () {
 			let positionFirstDay = this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth)
-			let visibleDaysPrewMonth = this.visibleDaysPrewMonth()
+			let firstVisibleDaysPrewMonth = this.firstVisibleDaysPrewMonth()
 			let countDaysCurrenMonth = 0
 			let countDaysNextMonth = 0
 			this.calendarItem = []
 
 			for (let index = 0; index < this.maxItem; index++) {
 				if (positionFirstDay > 0) {
-					this.calendarItem.push(visibleDaysPrewMonth)
-					visibleDaysPrewMonth++
+					this.calendarItem.push(firstVisibleDaysPrewMonth)
+					firstVisibleDaysPrewMonth++
 					positionFirstDay--
-				} else if (this.sumDaysPrewCurrentMonth() > index) {
+				} else if (this.sumDaysPrewCurrentMonth() >= index) {
 					countDaysCurrenMonth++
 					this.calendarItem.push(countDaysCurrenMonth)
 				} else {
@@ -150,6 +156,11 @@ export default {
 			if (index === this.activCell) {
 				return true
 			}
+		},
+		isCurrentMonth (index) {
+			if (index > this.visibleDaysPrewMonth() && index <= this.sumDaysPrewCurrentMonth()) {
+				return true
+			}
 		}
 	}
 }
@@ -184,9 +195,13 @@ $border-color: #333;
 		padding-bottom: 5%;
 		border: 1px solid $border-color;
 		transition: all .3s;
+		cursor: pointer;
 	}
-	.cell--active {
+	.cell--current-month.cell--active {
 		background: tomato;
+	}
+	.cell--current-month {
+		background-color: aquamarine;
 	}
 }
 // =============== animation =====================
