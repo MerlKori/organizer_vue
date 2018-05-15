@@ -8,34 +8,26 @@
 			<div
 			@click="goToday()"
 			class="header__date-today">
-				<span class="header__date-title">Today</span>
-				<span >{{dataTitle.today}} </span>
-				<span >{{dataTitle.monthTitle[dataTitle.month]}} </span>
-				<span >{{dataTitle.year}} </span>
+				<span class="header__date-title">Today :</span>
+				<span>{{isTodayDate}}</span>
 			</div>
 			<div >
-				<span class="header__date-title">/ Selected date </span>
-				<span >{{dataTitle.selectDay}} </span>
-				<span >{{dataTitle.monthTitle[dataTitle.selectMonth]}} </span>
-				<span >{{dataTitle.selectYear}}</span>
+				<span class="header__date-title">/ Selected date : </span>
+				<span>{{isSelectDate}}</span>
 			</div>
 		</div>
 		<button
 				@click="nexMonth()"
 				class="header__control header__control--next"></button>
 	</div>
+	<div class="header__bottom-border"></div>
 </header>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
 	name: 'OrganizerHeader',
-	props: {
-		dataTitle: {
-			type: Object,
-			required: true
-		}
-	},
 	data () {
 		return {}
 	},
@@ -49,14 +41,18 @@ export default {
 		goToday () {
 			this.$emit('showCurrentDate')
 		}
+	},
+	computed: {
+		...mapGetters('calendar', ['isSelectDate', 'isTodayDate'])
 	}
 }
 </script>
 
 <style lang="scss" scoped>
 .organizer__header {
-	background-color: #E56F75;
-	padding: 10px 10px;
+	position: relative;
+	background-color: #0d47a1;
+	padding: 10px 0;
 }
 .header__content {
 	display: flex;
@@ -71,12 +67,12 @@ export default {
 	margin: 0 auto;
 
 	span {
+		font-size: 1.25rem;
 		margin: 0 2px;
 	}
 }
 .header__date-title {
 	font-weight: 700;
-	color: #000;
 }
 .header__date-today {
 	margin-right: 5px;
@@ -130,5 +126,15 @@ $margin-btn: 5%;
 		transform: rotate(135deg);
 		right: 30%;
 	}
+}
+.header__bottom-border {
+	position: absolute;
+	bottom: -2px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 98%;
+	height: 2px;
+	border-radius: 100%;
+	background-color: #fff;
 }
 </style>

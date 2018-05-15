@@ -2,10 +2,10 @@
 <div class="organizer__wrapp">
 	<!-- OrganizerHeader -->
 	<organizer-header
-					@showPrewMonth="prewMonth()"
-					@showNextMonth="nexMonth()"
-					@showCurrentDate="goCurrentDate()"
-					:dataTitle="calendarData"/>
+		@showPrewMonth="prewMonth()"
+		@showNextMonth="nexMonth()"
+		@showCurrentDate="returnToday()"
+	/>
 	<main>
 		<ul class="days-list">
 			<li
@@ -29,11 +29,12 @@
 		</ul>
 	</main>
 	<!-- EventsWindow -->
-	<events-window />
+	<events-window :dataCalendar="calendarData"/>
 </div>
 </template>
 
 <script>
+import {mapState, mapMutations} from 'vuex'
 import OrganizerHeader from '@/components/organizer/OrganizerHeader'
 import EventsWindow from '@/components/organizer/events-window/EventsWindow'
 export default {
@@ -41,16 +42,8 @@ export default {
 	components: {OrganizerHeader, EventsWindow},
 	data () {
 		return {
-			Date: new Date(),
 			calendarData: {
-				daysTitle: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-				monthTitle: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				today: '',
-				year: '',
-				month: '',
-				selectDay: '',
-				selectMonth: '',
-				selectYear: '',
+				daysTitle: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 				daysMonth: '',
 				showDaysNextMonth: ''
 			},
@@ -64,16 +57,11 @@ export default {
 		this.createCalendar()
 	},
 	methods: {
+		...mapMutations('winRecords', ['toggleVisible']),
+		...mapMutations('calendar', ['showPrewMonth', 'showNexMonth', 'goTodaytDate', 'defaultSelectDate']),
 		initCalendarData () {
-			// today date
-			this.calendarData.today = this.Date.getDate()
-			this.calendarData.year = this.Date.getFullYear()
-			this.calendarData.month = this.Date.getMonth()
-			// select date default
-			this.calendarData.selectDay = this.calendarData.today
-			this.calendarData.selectMonth = this.calendarData.month
-			this.calendarData.selectYear = this.calendarData.year
-			this.activCell = (this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth) - 1) + this.calendarData.selectDay
+			this.defaultSelectDate()
+			this.activCell = (this.visibleDaysPrewMonth() + this.selectDate.day)
 		},
 		daysInMonth (year, month) {
 			return 33 - new Date(year, month, 33).getDate()
@@ -83,19 +71,19 @@ export default {
 		},
 		//  positionFirstDay - 1 количество дней до первого дня месяца
 		visibleDaysPrewMonth () {
-			return (this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth) - 1)
+			return (this.positionFirstDay(this.selectDate.year, this.selectDate.month) - 1)
 		},
 		//  this.calendarData.selectMonth - 1 предидущий месяц
 		firstVisibleDaysPrewMonth () {
-			return (this.daysInMonth(this.calendarData.selectYear, (this.calendarData.selectMonth - 1)) - this.visibleDaysPrewMonth())
+			return (this.daysInMonth(this.selectDate.year, (this.selectDate.month - 1)) - this.visibleDaysPrewMonth())
 		},
 		sumDaysPrewCurrentMonth () {
 			let daysPrew = this.visibleDaysPrewMonth()
-			let daysCurren = this.daysInMonth(this.calendarData.selectYear, this.calendarData.selectMonth)
+			let daysCurren = this.daysInMonth(this.selectDate.year, this.selectDate.month)
 			return daysPrew + daysCurren
 		},
 		createCalendar () {
-			let positionFirstDay = this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth)
+			let positionFirstDay = this.positionFirstDay(this.selectDate.year, this.selectDate.month)
 			let firstVisibleDaysPrewMonth = this.firstVisibleDaysPrewMonth()
 			let countDaysCurrenMonth = 0
 			let countDaysNextMonth = 0
@@ -114,42 +102,10 @@ export default {
 					this.calendarItem.push(countDaysNextMonth)
 				}
 			}
-			this.activCell = (this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth) - 1) + this.calendarData.selectDay
+			this.activCell = (this.visibleDaysPrewMonth() + this.selectDate.day)
 		},
-		nexMonth () {
-			if (this.calendarData.selectMonth >= 11) {
-				this.calendarData.selectMonth = 0
-				this.calendarData.selectYear++
-			} else {
-				this.calendarData.selectMonth++
-			}
-			this.createCalendar()
-		},
-		prewMonth () {
-			if (this.calendarData.selectMonth <= 0) {
-				this.calendarData.selectMonth = 11
-				this.calendarData.selectYear--
-			} else {
-				this.calendarData.selectMonth--
-			}
-			this.createCalendar()
-		},
-		changeDay (index) {
-			this.calendarData.selectDay = this.calendarItem[index]
-			if (index > this.sumDaysPrewCurrentMonth()) {
-				this.calendarData.selectMonth++
-				this.createCalendar()
-			} else if (index < this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth)) {
-				this.calendarData.selectMonth--
-				this.createCalendar()
-			} else {
-				this.activCell = index
-			}
-		},
-		goCurrentDate () {
-			this.calendarData.selectDay = this.calendarData.today
-			this.calendarData.selectMonth = this.calendarData.month
-			this.calendarData.selectYear = this.calendarData.year
+		returnToday () {
+			this.goTodaytDate()
 			this.createCalendar()
 		},
 		isActiveCell (index) {
@@ -161,27 +117,55 @@ export default {
 			if (index > this.visibleDaysPrewMonth() && index <= this.sumDaysPrewCurrentMonth()) {
 				return true
 			}
+		},
+		prewMonth () {
+			this.showPrewMonth()
+			this.createCalendar()
+		},
+		nexMonth () {
+			this.showNexMonth()
+			this.createCalendar()
+		},
+		changeDay (index) {
+			this.selectDate.day = this.calendarItem[index]
+			if (index > this.sumDaysPrewCurrentMonth()) {
+				this.calendarData.selectMonth++
+				this.createCalendar()
+			} else if (index < this.positionFirstDay(this.calendarData.selectYear, this.calendarData.selectMonth)) {
+				this.calendarData.selectMonth--
+				this.createCalendar()
+			} else {
+				this.activCell = index
+			}
+			this.toggleVisible()
 		}
+	},
+	computed: {
+		...mapState('calendar', ['todayDate', 'selectDate'])
+
 	}
 }
 </script>
 
 <style lang="scss" scoped>
 // ============= variaqbles ===========
-$border-color: #333;
+$border-color: #fff;
 
-.wrapp {
+.organizer__wrapp {
 	height: 100vh;
+	background: linear-gradient(to bottom, #0d47a1 , #1565c0, #1976d2);
 }
 // ================= days-list ===============================
 .days-list {
 	display: flex;
 
 	li {
-		font-size: 1rem;
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: #fff;
+		padding: .5rem 0;
 		text-align: center;
 		width: calc(100% / 7);
-		border: 1px solid $border-color;
 	}
 }
 // ============ calendar ========
@@ -190,10 +174,14 @@ $border-color: #333;
 	flex-wrap: wrap;
 
 	li {
-		font-size: 1rem;
+		font-size: 1.25rem;
+		color: #fff;
 		width: calc(100% / 7);
-		padding-bottom: 5%;
-		border: 1px solid $border-color;
+		height: calc((100vh - 95.6px) / 6);
+		padding: 10px 0 0 10px;
+		border-right: 1px solid $border-color;
+		border-top: 1px solid $border-color;
+		opacity: .4;
 		transition: all .3s;
 		cursor: pointer;
 	}
@@ -201,7 +189,8 @@ $border-color: #333;
 		background: tomato;
 	}
 	.cell--current-month {
-		background-color: aquamarine;
+		opacity: 1;
+		border: 1px solid $border-color;
 	}
 }
 // =============== animation =====================
