@@ -1,6 +1,7 @@
 const state = {
 	visible: false,
-	erecordsList: []
+	eventsDataList: [],
+	allRecords: []
 }
 
 const mutations = {
@@ -14,6 +15,9 @@ const mutations = {
 				return item
 			}
 		})
+	},
+	getAllRecords (state, arr) {
+		state.allRecords = arr
 	}
 }
 

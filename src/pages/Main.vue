@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex'
+import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
 import OrganizerHeader from '@/components/organizer/OrganizerHeader'
 import EventsWindow from '@/components/organizer/events-window/EventsWindow'
 export default {
@@ -55,9 +55,11 @@ export default {
 	created () {
 		this.initCalendarData()
 		this.createCalendar()
+		this.loadRecords()
 	},
 	methods: {
-		...mapMutations('winRecords', ['toggleVisible']),
+		...mapActions('winRecords', ['doFilter']),
+		...mapMutations('winRecords', ['toggleVisible', 'getAllRecords']),
 		...mapMutations('calendar', ['showPrewMonth', 'showNexMonth', 'goTodaytDate', 'defaultSelectDate']),
 		initCalendarData () {
 			this.defaultSelectDate()
@@ -137,12 +139,32 @@ export default {
 			} else {
 				this.activCell = index
 			}
+
+			this.doFilter({
+				answerArr: this.allRecords,
+				selectData: this.isSelectDate}
+			)
+
 			this.toggleVisible()
+		},
+		loadRecords () {
+			const xhr = new XMLHttpRequest()
+			let formData = JSON.stringify({
+				test: 'test123'
+			})
+			xhr.onreadystatechange = () => {
+				if (xhr.status === 200 && xhr.readyState === 4) {
+					this.getAllRecords(JSON.parse(xhr.responseText))
+				}
+			}
+			xhr.open('POST', 'http://localhost:9595/find-all-rec')
+			xhr.send(formData)
 		}
 	},
 	computed: {
-		...mapState('calendar', ['todayDate', 'selectDate'])
-
+		...mapState('calendar', ['todayDate', 'selectDate']),
+		...mapState('winRecords', ['allRecords']),
+		...mapGetters('calendar', ['isSelectDate'])
 	}
 }
 </script>

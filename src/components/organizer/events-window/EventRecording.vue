@@ -19,6 +19,7 @@
 
 <script>
 // import {eventBus} from '../../../eventBus.js'
+import {mapGetters, mapActions} from 'vuex'
 export default {
 	name: 'EventRecording',
 	props: {
@@ -32,6 +33,7 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions('winRecords', ['doFilter']),
 		toggleShowDesc () {
 			this.showDescription = !this.showDescription
 		},
@@ -42,15 +44,18 @@ export default {
 			})
 			xhr.onreadystatechange = () => {
 				if (xhr.status === 200 && xhr.readyState === 4) {
-					let records = JSON.parse(xhr.responseText)
-					console.log(records)
-					// eventBus.$emit('refreshRecord', records)
+					this.doFilter({
+						answerArr: JSON.parse(xhr.responseText),
+						selectData: this.isSelectDate}
+					)
 				}
-				console.log(1)
 			}
 			xhr.open('POST', 'http://localhost:9595/rem-rec')
 			xhr.send(formData)
 		}
+	},
+	computed: {
+		...mapGetters('calendar', ['isSelectDate'])
 	}
 }
 </script>

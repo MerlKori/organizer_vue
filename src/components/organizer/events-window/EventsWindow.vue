@@ -17,20 +17,20 @@
 						:recordingData="el"/>
 		<div class="add-event">
 			<input
-				@change="newEvTitle = $event.target.value"
+				v-model="newEvTitle"
 				type="text"
 				name="event-title"
 				class="add-event__title"
 				placeholder="Event title"
 			>
 			<textarea
-					@change="newEvDesc = $event.target.value"
+					v-model="newEvDesc"
 					name="event-desc"
 					class="add-event__decs"
 					placeholder="Event description"
 			></textarea>
 			<button
-				@click="sendInquiry()"
+				@click="sendRequest()"
 				class="add-event__btn">add</button>
 		</div>
 	</div>
@@ -51,7 +51,6 @@ export default {
 	},
 	data () {
 		return {
-			eventsDataList: [],
 			newEvTitle: '',
 			newEvDesc: ''
 		}
@@ -59,7 +58,7 @@ export default {
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
 		...mapMutations('winRecords', ['toggleVisible']),
-		sendInquiry () {
+		sendRequest () {
 			const xhr = new XMLHttpRequest()
 			let formData = JSON.stringify({
 				date: this.isSelectDate,
@@ -68,7 +67,6 @@ export default {
 			})
 			xhr.onreadystatechange = () => {
 				if (xhr.readyState === 4) {
-					this.filterRecords(JSON.parse(xhr.responseText))
 					this.doFilter({
 						answerArr: JSON.parse(xhr.responseText),
 						selectData: this.isSelectDate}
@@ -77,10 +75,12 @@ export default {
 			}
 			xhr.open('POST', 'http://localhost:9595/created')
 			xhr.send(formData)
+			this.newEvTitle = ''
+			this.newEvDesc = ''
 		}
 	},
 	computed: {
-		...mapState('winRecords', ['visible']),
+		...mapState('winRecords', ['visible', 'eventsDataList']),
 		...mapGetters('calendar', ['isSelectDate'])
 	}
 }
