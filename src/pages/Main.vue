@@ -56,6 +56,7 @@ export default {
 		this.initCalendarData()
 		this.createCalendar()
 		this.loadRecords()
+		// this.searchRec()
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
@@ -160,6 +161,11 @@ export default {
 			xhr.open('POST', 'http://localhost:9595/find-all-rec')
 			xhr.send(formData)
 		}
+		// searchRec () {
+		// 	let Alldate = this.allRecords.map(item => {
+		// 		return item.date
+		// 	})
+		// }
 	},
 	computed: {
 		...mapState('calendar', ['todayDate', 'selectDate']),

@@ -24,10 +24,10 @@
 				placeholder="Event title"
 			>
 			<textarea
-					v-model="newEvDesc"
-					name="event-desc"
-					class="add-event__decs"
-					placeholder="Event description"
+				v-model="newEvDesc"
+				name="event-desc"
+				class="add-event__decs"
+				placeholder="Event description"
 			></textarea>
 			<button
 				@click="sendRequest()"
