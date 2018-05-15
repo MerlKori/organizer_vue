@@ -4,7 +4,9 @@
 		<h3
 			@click="toggleShowDesc()"
 			class="recording__title">{{recordingData.title}}</h3>
-		<button class="recording__head-btn edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
+		<button
+				@click="toogleVisEdit()"
+				class="recording__head-btn"><img src="../../../assets/images/edit.png" alt="edit"></button>
 		<button
 				@click="deleteRecord(recordingData._id)"
 				class="recording__head-btn recording__remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
@@ -14,6 +16,23 @@
 		v-show="showDescription"
 		class="recording__description">{{recordingData.desc}}</div>
 	</transition>
+	<!-- EDIT REC -->
+	<div
+		v-show="editWinVisible"
+		class="edit">
+		<input
+				v-model="editTitleVAl"
+				type="text" class="edit__title" name="edit-title">
+		<textarea
+				v-model="editDescVAl"
+				name="edit-desc" class="edit__desc"></textarea>
+		<button
+				@click="editRec(recordingData._id)"
+				class="send-edit">Edit</button>
+		<button
+				@click="toogleVisEdit()"
+				class="cancel-edit">Cancel</button>
+	</div>
 </div>
 </template>
 
@@ -29,7 +48,10 @@ export default {
 	},
 	data () {
 		return {
-			showDescription: false
+			showDescription: false,
+			editWinVisible: false,
+			editTitleVAl: this.recordingData.title,
+			editDescVAl: this.recordingData.desc
 		}
 	},
 	methods: {
@@ -52,6 +74,33 @@ export default {
 			}
 			xhr.open('POST', 'http://localhost:9595/rem-rec')
 			xhr.send(formData)
+		},
+		editRec (id) {
+			const xhr = new XMLHttpRequest()
+			let formData = JSON.stringify([
+				{
+					_id: id
+				},
+				{
+					date: this.isSelectDate,
+					title: this.editTitleVAl,
+					desc: this.editDescVAl
+				}
+			])
+			xhr.onreadystatechange = () => {
+				if (xhr.status === 200 && xhr.readyState === 4) {
+					this.doFilter({
+						answerArr: JSON.parse(xhr.responseText),
+						selectData: this.isSelectDate}
+					)
+					this.toogleVisEdit()
+				}
+			}
+			xhr.open('POST', 'http://localhost:9595/update')
+			xhr.send(formData)
+		},
+		toogleVisEdit () {
+			this.editWinVisible = !this.editWinVisible
 		}
 	},
 	computed: {
@@ -101,4 +150,56 @@ $bd-color: #0d47a1;
 // .slide-leave-to {
 // 	transform: scaleY(0);
 // }
+
+// ============================================= EDIT REC ===============================================
+.edit {
+	position: absolute;
+	width: 100%;
+	background-color: #333;
+	padding: 15px;
+	z-index: 30;
+}
+.edit__title,
+.edit__desc {
+	display: block;
+	width: 100%;
+	font-size: 1rem;
+	color: #0d47a1;
+	padding: 5px;
+	margin-top: 5px;
+	border: 1px solid $bd-color;
+}
+
+.edit__desc {
+	min-height: 100px;
+}
+
+.send-edit {
+	display: inline-block;
+	width: 100%;
+	max-width: 80px;
+	margin-top: 15px;
+	height: 30px;
+	border-radius: 5px;
+	font-size: 1rem;
+	font-weight: 700;
+	color: #fff;
+	text-transform: uppercase;
+	background-color: #0d47a1;
+	cursor: pointer;
+}
+.cancel-edit {
+	display: inline-block;
+	width: 100%;
+	max-width: 80px;
+	margin-top: 15px;
+	height: 30px;
+	border-radius: 5px;
+	font-size: 1rem;
+	font-weight: 700;
+	color: #fff;
+	text-transform: uppercase;
+	background-color: tomato;
+	cursor: pointer;
+}
 </style>
