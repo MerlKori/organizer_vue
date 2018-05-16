@@ -6,6 +6,9 @@
 		<h3
 			@click="toggleShowDesc()"
 			class="recording__title">{{recordingData.title}}</h3>
+		<div
+			:style="{background: recordingData.priority.prColor}"
+			class="recording__priority"></div>
 		<button
 				@click="toogleVisEdit()"
 				class="recording__head-btn recording__head-btn--edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
@@ -19,24 +22,24 @@
 		class="recording__description">{{recordingData.desc}}</div>
 	</transition>
 	<!-- EDIT REC -->
-	<div
-		v-show="editWinVisible"
-		class="edit">
-		<input
-				v-model="editTitleVAl"
-				type="text" class="edit__title" name="edit-title">
-		<textarea
-				v-model="editDescVAl"
-				name="edit-desc" class="edit__desc"></textarea>
-		<div class="edit__btns-wrap">
-			<button
-				@click="editRec(recordingData._id)"
-				class="edit__btns send-edit">Edit</button>
-			<button
-					@click="toogleVisEdit()"
-					class="edit__btns cancel-edit">Cancel</button>
+		<div
+			v-show="editWinVisible"
+			class="edit">
+			<input
+					v-model="editTitleVAl"
+					type="text" class="edit__title" name="edit-title">
+			<textarea
+					v-model="editDescVAl"
+					name="edit-desc" class="edit__desc"></textarea>
+			<div class="edit__btns-wrap">
+				<button
+					@click="editRec(recordingData._id)"
+					class="edit__btns send-edit">Edit</button>
+				<button
+						@click="toogleVisEdit()"
+						class="edit__btns cancel-edit">Cancel</button>
+			</div>
 		</div>
-	</div>
 </div>
 </template>
 
@@ -172,6 +175,10 @@ $transition-time: .3s;
 		vertical-align: middle;
 	}
 }
+.recording__priority {
+	width: 30px;
+	height: 30px;
+}
 .recording__head-btn--edit {
 	background-color: #26a69a;
 }
@@ -259,4 +266,5 @@ $transition-time: .3s;
 		background-color: #E56F75;
 	}
 }
+
 </style>

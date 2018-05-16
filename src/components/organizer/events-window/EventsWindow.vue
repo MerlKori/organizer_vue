@@ -1,6 +1,8 @@
 <template>
+<transition name="recWin">
 <div v-show="this.visible">
-	<div class="events-window">
+	<div
+		class="events-window">
 		<div class="events-window__header">
 			<h2 class="events-window__header-title">
 				<span ><b>Selected date :</b></span>
@@ -48,6 +50,7 @@
 	</div>
 	<div class="overlay"></div>
 </div>
+</transition>
 </template>
 
 <script>
@@ -136,6 +139,9 @@ $window-text-color: rgba(0,0,0,0.87);
 	border-radius: 5px;
 	z-index: 20;
 	background-color: #fff;
+}
+.events-window--hiden {
+	opacity: 0;
 }
 // =============================================== header ====================================================
 .events-window__header {
@@ -301,5 +307,12 @@ $focus-transition-timing: .3s;
 	height: 100vh;
 	background-color: rgba(0,0,0, .8);
 	z-index: 15;
+}
+// =============================== animations ============================================
+.recWin-enter-active, .recWin-leave-active {
+  transition:  opacity .5s;
+}
+.recWin-enter, .recWin-leave-to {
+  opacity: 0;
 }
 </style>

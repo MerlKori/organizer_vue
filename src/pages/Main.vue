@@ -20,12 +20,14 @@
 			<li
 				v-for="(val, index) in calendarItem"
 				:key="index"
-				:class="{'cell--active': isActiveCell(index), 'cell--current-month': isCurrentMonth(index), 'test-red': testOnRec(index, val)}"
+				:class="{'cell--active': isActiveCell(index), 'cell--current-month': isCurrentMonth(index)}"
 				@click="changeDay(index)"
 			>
 			{{val}}
 			<!-- RecordLabel -->
-			<!-- <record-label /> -->
+			<record-label
+				:class="{'rec--low': showRecLow(index, val, listValue[0].value), 'rec--med': showRecLow(index, val, listValue[1].value), 'rec--hig': showRecLow(index, val, listValue[2].value)}"
+			/>
 			</li>
 			</transition-group>
 		</ul>
@@ -163,12 +165,12 @@ export default {
 			xhr.open('POST', 'http://localhost:9595/find-all-rec')
 			xhr.send(formData)
 		},
-		testOnRec (id, elVal) {
+		showRecLow (id, elVal, priority) {
 			if ((id > this.visibleDaysPrewMonth()) && (id <= this.sumDaysPrewCurrentMonth())) {
 				let arr = this.allRecords
 				let thisDate = `${elVal} ${this.monthTitle[this.selectDate.month]} ${this.selectDate.year}`
 				for (let index = 0; index < arr.length; index++) {
-					if (arr[index].date === thisDate) {
+					if (arr[index].date === thisDate && arr[index].priority.prVal === priority) {
 						return true
 					}
 				}
@@ -178,6 +180,7 @@ export default {
 	computed: {
 		...mapState('calendar', ['todayDate', 'selectDate', 'monthTitle']),
 		...mapState('winRecords', ['allRecords']),
+		...mapState('Select', ['listValue']),
 		...mapGetters('calendar', ['isSelectDate'])
 	}
 }
@@ -230,32 +233,4 @@ $border-color: #fff;
 		border: 1px solid $border-color;
 	}
 }
-// .test-red {
-// 	position: relative;
-
-// 	&::before {
-// 		content: '';
-// 		position: absolute;
-// 		top: 0;
-// 		left: 0;
-// 		width: 100%;
-// 		height: 100%;
-// 		background-color: rgba(255,203,156, .8);
-// 	}
-// }
-// =============== animation =====================
-// .list-enter {
-// 	transform: translateX(100px);
-// 	opacity: 0;
-// }
-// .list-enter-active {
-// 	transition: all .5s;
-// }
-// .list-leave-to {
-// 	transform: translateX(100px);
-// 	opacity: 0;
-// }
-// .list-leave-active{
-// 	transition: all .5s;
-// }
 </style>

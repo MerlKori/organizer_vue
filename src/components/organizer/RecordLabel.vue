@@ -25,20 +25,31 @@ $size-label: 22px;
 	align-items: center;
 	justify-content: space-around;
 	max-width: 60%;
+
+	&.rec--low .label--low {
+		opacity: 1;
+	}
+	&.rec--med .label--medium {
+		opacity: 1;
+	}
+	&.rec--hig .label--highest{
+		opacity: 1;
+	}
 }
 .labels {
 	width: $size-label;
 	height: $size-label;
 	border-radius: 50%;
 	margin: 0 5px;
+	opacity: 0;
 }
 .label--low {
-		background-color: #00e676;
+		background-color: #42A645;
 }
 .label--medium {
-		background-color: #ffa000;
+		background-color: #F9C120;
 }
 .label--highest {
-		background-color: #dd2c00;
+		background-color: #D23949;
 }
 </style>
