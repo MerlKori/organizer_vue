@@ -20,10 +20,12 @@
 			<li
 				v-for="(val, index) in calendarItem"
 				:key="index"
-				:class="{'cell--active': isActiveCell(index), 'cell--current-month': isCurrentMonth(index)}"
+				:class="{'cell--active': isActiveCell(index), 'cell--current-month': isCurrentMonth(index), 'test-red': testOnRec(index, val)}"
 				@click="changeDay(index)"
 			>
 			{{val}}
+			<!-- RecordLabel -->
+			<!-- <record-label /> -->
 			</li>
 			</transition-group>
 		</ul>
@@ -37,9 +39,10 @@
 import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
 import OrganizerHeader from '@/components/organizer/OrganizerHeader'
 import EventsWindow from '@/components/organizer/events-window/EventsWindow'
+import RecordLabel from '@/components/organizer/RecordLabel'
 export default {
 	name: 'Main',
-	components: {OrganizerHeader, EventsWindow},
+	components: {OrganizerHeader, EventsWindow, RecordLabel},
 	data () {
 		return {
 			calendarData: {
@@ -56,7 +59,6 @@ export default {
 		this.initCalendarData()
 		this.createCalendar()
 		this.loadRecords()
-		// this.searchRec()
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
@@ -160,15 +162,21 @@ export default {
 			}
 			xhr.open('POST', 'http://localhost:9595/find-all-rec')
 			xhr.send(formData)
+		},
+		testOnRec (id, elVal) {
+			if ((id > this.visibleDaysPrewMonth()) && (id <= this.sumDaysPrewCurrentMonth())) {
+				let arr = this.allRecords
+				let thisDate = `${elVal} ${this.monthTitle[this.selectDate.month]} ${this.selectDate.year}`
+				for (let index = 0; index < arr.length; index++) {
+					if (arr[index].date === thisDate) {
+						return true
+					}
+				}
+			}
 		}
-		// searchRec () {
-		// 	let Alldate = this.allRecords.map(item => {
-		// 		return item.date
-		// 	})
-		// }
 	},
 	computed: {
-		...mapState('calendar', ['todayDate', 'selectDate']),
+		...mapState('calendar', ['todayDate', 'selectDate', 'monthTitle']),
 		...mapState('winRecords', ['allRecords']),
 		...mapGetters('calendar', ['isSelectDate'])
 	}
@@ -202,6 +210,7 @@ $border-color: #fff;
 	flex-wrap: wrap;
 
 	li {
+		position: relative;
 		font-size: 1.25rem;
 		color: #fff;
 		width: calc(100% / 7);
@@ -221,6 +230,19 @@ $border-color: #fff;
 		border: 1px solid $border-color;
 	}
 }
+// .test-red {
+// 	position: relative;
+
+// 	&::before {
+// 		content: '';
+// 		position: absolute;
+// 		top: 0;
+// 		left: 0;
+// 		width: 100%;
+// 		height: 100%;
+// 		background-color: rgba(255,203,156, .8);
+// 	}
+// }
 // =============== animation =====================
 // .list-enter {
 // 	transform: translateX(100px);

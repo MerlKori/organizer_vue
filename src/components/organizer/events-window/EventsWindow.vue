@@ -8,30 +8,42 @@
 			</h2>
 			<button
 				@click="toggleVisible()"
-				class="window__close-btn" ><img src="../../../assets/images/close.png" alt="close"></button>
+				class="window__close-btn" ></button>
 		</div>
 		<!-- EventRecording -->
 		<event-recording
 						v-for="(el, index) in eventsDataList"
 						:key="index"
 						:recordingData="el"/>
-		<div class="add-event">
-			<input
-				v-model="newEvTitle"
-				type="text"
-				name="event-title"
-				class="add-event__title"
-				placeholder="Event title"
-			>
-			<textarea
-				v-model="newEvDesc"
-				name="event-desc"
-				class="add-event__decs"
-				placeholder="Event description"
-			></textarea>
+		<div class="add-rec">
+			<div class="add-rec__input-wrap ">
+				<input
+					v-model="newRecTitle"
+					type="text"
+					name="rec-title"
+					id="new-rec-title"
+					class="add-rec__title"
+				>
+				<label
+					:class="{'add-rec__title--label-focus': titleLabelVisible}"
+					for="new-rec-title">record title</label>
+			</div>
+			<div class="add-rec__input-wrap">
+				<textarea
+					v-model="newRecDesc"
+					name="rec-desc"
+					id="new-rec-desc"
+					class="add-rec__decs"
+				></textarea>
+				<label
+					:class="{'add-rec__decs--label-focus': descLabelVisible}"
+					for="new-rec-desc">Description</label>
+			</div>
+			<!-- PrioritySelect -->
+			<priority-select />
 			<button
 				@click="sendRequest()"
-				class="add-event__btn">add</button>
+				class="add-rec__btn">add record</button>
 		</div>
 	</div>
 	<div class="overlay"></div>
@@ -41,9 +53,10 @@
 <script>
 import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
 import EventRecording from '@/components/organizer/events-window/EventRecording'
+import PrioritySelect from '@/components/organizer/events-window/PrioritySelect'
 export default {
 	name: 'EventsWindow',
-	components: {EventRecording},
+	components: {EventRecording, PrioritySelect},
 	props: {
 		dataCalendar: {
 			type: Object
@@ -51,8 +64,8 @@ export default {
 	},
 	data () {
 		return {
-			newEvTitle: '',
-			newEvDesc: ''
+			newRecTitle: '',
+			newRecDesc: ''
 		}
 	},
 	methods: {
@@ -62,8 +75,12 @@ export default {
 			const xhr = new XMLHttpRequest()
 			let formData = JSON.stringify({
 				date: this.isSelectDate,
-				title: this.newEvTitle,
-				desc: this.newEvDesc
+				title: this.newRecTitle,
+				desc: this.newRecDesc,
+				priority: {
+					prVal: this.selectVal,
+					prColor: this.colorTitle
+				}
 			})
 			xhr.onreadystatechange = () => {
 				if (xhr.readyState === 4) {
@@ -75,18 +92,34 @@ export default {
 			}
 			xhr.open('POST', 'http://localhost:9595/created')
 			xhr.send(formData)
-			this.newEvTitle = ''
-			this.newEvDesc = ''
+			this.newRecTitle = ''
+			this.newRecDesc = ''
 		}
 	},
 	computed: {
 		...mapState('winRecords', ['visible', 'eventsDataList']),
-		...mapGetters('calendar', ['isSelectDate'])
+		...mapState('Select', ['selectVal', 'colorTitle']),
+		...mapGetters('calendar', ['isSelectDate']),
+		descLabelVisible () {
+			if (this.newRecDesc === '') {
+				return false
+			} else {
+				return true
+			}
+		},
+		titleLabelVisible () {
+			if (this.newRecTitle === '') {
+				return false
+			} else {
+				return true
+			}
+		}
 	}
 }
 </script>
 
 <style lang="scss" scoped>
+$window-text-color: rgba(0,0,0,0.87);
 .events-window {
 	position: fixed;
 	top: 50%;
@@ -104,61 +137,160 @@ export default {
 	z-index: 20;
 	background-color: #fff;
 }
-// header
+// =============================================== header ====================================================
 .events-window__header {
 	position: relative;
-	border-bottom: 1px solid #122855;
 	padding: 0 0 10px;
 	margin-bottom: 20px;
 }
 .events-window__header-title {
-	font-size: 1.25rem;
-	color: #122855;
+	font-size: 1.1rem;
+	color: $window-text-color;
 }
+// btn close variables
+$btn-color: #E56F75;
+$bd-width: 1px;
+$anim-timing: .25s;
 .window__close-btn {
 	position: absolute;
 	top: -2px;
-	right: 10px;
+	right: 0px;
 	height: 25px;
 	width: 25px;
-	background-color: transparent;
-	transform-origin: center;
+	background-color: rgba(229,111,117, 0);
+	border: $bd-width solid $btn-color;
+	border-radius: 5px;
 	cursor: pointer;
+	transition: $anim-timing;
+
+	&:hover {
+		background-color: rgba(229,111,117, .6);
+
+		&::before,
+		&::after {
+			background-color: #fff;
+		}
+	}
+
+	&::before,
+	&::after {
+		position: absolute;
+		top: 12px;
+		content: '';
+		width: 80%;
+		height: $bd-width;
+		background-color: $btn-color;
+		transition: $anim-timing;
+	}
+	&::before {
+		transform: rotate(-45deg);
+		left: 3px;
+	}
+	&::after {
+		transform: rotate(45deg);
+		right: 2px;
+	}
 }
-// add events
-.add-event {
+// ============================================= add events =========================================================
+$focus-color: #26a69a;
+$focus-transition-timing: .3s;
+.add-rec {
 	margin: auto 30px 30px;
 	width: 70%;
 }
-.add-event__decs,
-.add-event__title {
+.add-rec__title,
+.add-rec__decs {
 	display: block;
 	width: 100%;
-	margin: 5px 0;
+	margin-bottom: 10px;
 	padding: 5px 10px;
-	border: 1px solid #122855;
-	border-radius: 5px;
-	transition: box-shadow .3s;
-
-	&:focus {
-		box-shadow: 0 0 10px #0d47a1;
+	font-size: .9rem;
+	color: $window-text-color;
+	transition: border-bottom $focus-transition-timing, box-shadow $focus-transition-timing;
+	cursor: pointer;
+}
+.add-rec__input-wrap {
+	position: relative;
+	label {
+		position: absolute;
+		left: 10px;
+		font-size: .9rem;
+		text-transform: capitalize;
+		color: #9e9e9e;
+		cursor: pointer;
 	}
 }
-.add-event__decs {
-	min-height: 100px;
+.add-rec__title  {
+	border: none;
+	border-bottom: 1px solid #9e9e9e;
+
+	& + label {
+		top: 15%;
+		transition: top $focus-transition-timing, font-size $focus-transition-timing, color $focus-transition-timing;
+	}
+
+	&:focus {
+		border-bottom: 1px solid $focus-color;
+		box-shadow: 0 1px 0 0 $focus-color;
+
+		& + label {
+			top: - 45%;
+			font-size: .7rem;
+			color: $focus-color;
+		}
+	}
+	& + .add-rec__title--label-focus {
+			top: - 45%;
+			font-size: .7rem;
+			color: $focus-color;
+		}
 }
-.add-event__btn {
+.add-rec__decs {
+	height: 80px;
+	overflow-y: auto;
+	border: 1px solid rgba(0,0,0, 0);
+	border-top-color: #9e9e9e;
+
+	& + label {
+		top: 5%;
+		transition: top $focus-transition-timing, font-size $focus-transition-timing, opacity $focus-transition-timing, height $focus-transition-timing;
+	}
+
+	&:focus {
+		border: 1px solid $focus-color;
+		height: 150px;
+
+		& + label {
+			top: 105%;
+			font-size: .7rem;
+			opacity: 0;
+		}
+	}
+	& + .add-rec__decs--label-focus {
+			top: 105%;
+			font-size: .7rem;
+			opacity: 0;
+	}
+}
+
+.add-rec__btn {
 	display: block;
 	width: 100%;
-	max-width: 100px;
+	max-width: 150px;
 	height: 40px;
 	border-radius: 5px;
-	font-size: 1.25rem;
-	font-weight: 700;
-	color: #fff;
-	text-transform: uppercase;
-	background-color: #0d47a1;
+	font-size: 1.2rem;
+	color: $focus-color;
+	text-transform: capitalize;
+	background-color: #fff;
+	border: 1px solid $focus-color;
+	transition: background-color $focus-transition-timing, color $focus-transition-timing;
 	cursor: pointer;
+
+	&:hover {
+		background-color: $focus-color;
+		color: #fff;
+	}
 }
 // ================= overlay ================
 .overlay {
@@ -167,7 +299,7 @@ export default {
 	left: 0;
 	width: 100%;
 	height: 100vh;
-	background-color: rgba(0,0,0, .5);
+	background-color: rgba(0,0,0, .8);
 	z-index: 15;
 }
 </style>

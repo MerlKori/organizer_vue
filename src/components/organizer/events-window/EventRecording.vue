@@ -1,15 +1,17 @@
 <template>
-<div class="recording">
+<div
+	:class="{'recording--active': isActive}"
+	class="recording">
 	<div class="recording__head">
 		<h3
 			@click="toggleShowDesc()"
 			class="recording__title">{{recordingData.title}}</h3>
 		<button
 				@click="toogleVisEdit()"
-				class="recording__head-btn"><img src="../../../assets/images/edit.png" alt="edit"></button>
+				class="recording__head-btn recording__head-btn--edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
 		<button
 				@click="deleteRecord(recordingData._id)"
-				class="recording__head-btn recording__remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
+				class="recording__head-btn recording__head-btn--remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
 	</div>
 	<transition name="desc">
 		<div
@@ -26,12 +28,14 @@
 		<textarea
 				v-model="editDescVAl"
 				name="edit-desc" class="edit__desc"></textarea>
-		<button
+		<div class="edit__btns-wrap">
+			<button
 				@click="editRec(recordingData._id)"
-				class="send-edit">Edit</button>
-		<button
-				@click="toogleVisEdit()"
-				class="cancel-edit">Cancel</button>
+				class="edit__btns send-edit">Edit</button>
+			<button
+					@click="toogleVisEdit()"
+					class="edit__btns cancel-edit">Cancel</button>
+		</div>
 	</div>
 </div>
 </template>
@@ -104,59 +108,90 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters('calendar', ['isSelectDate'])
+		...mapGetters('calendar', ['isSelectDate']),
+		isActive () {
+			if (this.showDescription === true) {
+				return true
+			} else {
+				return false
+			}
+		}
 	}
 }
 </script>
 
 <style lang="scss" scoped>
 // variables
-$bd-color: #0d47a1;
-
+$bd-color: #9e9e9e;
+$text-color: rgba(0,0,0, .8);
+$active-color: #26a69a;
+$transition-time: .3s;
 .recording {
 	position: relative;
-	margin-bottom: 5px;
+}
+.recording--active {
+	.recording__head {
+		border-bottom: 1px solid $active-color;
+	}
+	.recording__title {
+		color: $active-color;
+	}
+	.recording__description {
+		border: 1px solid $active-color;
+		border-top: none;
+	}
 }
 .recording__head {
 	display: flex;
-	border: 1px solid $bd-color;
-	padding: 3px 10px;
+	border-bottom: 1px solid $bd-color;
+	transition: border-bottom $transition-time, background-color .25s;
+
+	&:hover {
+		background-color: rgba(38,166,154, .1);
+	}
 }
 .recording__title {
-	font-size: 1.25rem;
-	color: #0d47a1;
+	font-size: 1rem;
+	padding: 5px 10px;
+	color: $text-color;
 	flex-grow: 1;
 	cursor: pointer;
 }
 .recording__head-btn {
-	background-color: #fff;
-	margin: 0 5px;
-	width: 20px;
-	height: 20px;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	transition: filter .3s;
 	cursor: pointer;
+
+	&:hover {
+		filter: brightness(130%);
+	}
+
+	img {
+		vertical-align: middle;
+	}
+}
+.recording__head-btn--edit {
+	background-color: #26a69a;
+}
+.recording__head-btn--remove {
+	background-color: #E56F75;
 }
 .recording__description {
 	padding: 10px;
 	border: 1px solid $bd-color;
+	color: $text-color;
+	border-top: none;
 	transform-origin: top;
 }
-// animation
-// .desc-enter-active,
-// .desc-leave-active {
-// 	transition: all .3s ease;
-// }
-
-// .desc-enter,
-// .slide-leave-to {
-// 	transform: scaleY(0);
-// }
 
 // ============================================= EDIT REC ===============================================
 .edit {
 	position: absolute;
 	width: 100%;
-	background-color: #333;
-	padding: 15px;
+	background-color: #fff;
+	padding: 20px 15px;
 	z-index: 30;
 }
 .edit__title,
@@ -164,42 +199,64 @@ $bd-color: #0d47a1;
 	display: block;
 	width: 100%;
 	font-size: 1rem;
-	color: #0d47a1;
+	color: #333;
 	padding: 5px;
 	margin-top: 5px;
-	border: 1px solid $bd-color;
+	transition: all .25s;
+}
+
+.edit__title {
+	border: none;
+	border-bottom: 1px solid $bd-color;
+	&:focus {
+		color: #26a69a;
+		border-bottom: 1px solid #26a69a;
+	}
 }
 
 .edit__desc {
-	min-height: 100px;
+	border: 1px solid $bd-color;
+	height: 150px;
+	overflow-y: auto;
+	&:focus {
+		color: #26a69a;
+		border: 1px solid #26a69a;
+	}
 }
 
-.send-edit {
+.edit__btns-wrap {
+	text-align: right;
+}
+
+.edit__btns  {
 	display: inline-block;
 	width: 100%;
 	max-width: 80px;
-	margin-top: 15px;
+	margin: 15px 10px;
 	height: 30px;
 	border-radius: 5px;
 	font-size: 1rem;
-	font-weight: 700;
-	color: #fff;
-	text-transform: uppercase;
-	background-color: #0d47a1;
+	text-transform: capitalize;
+	background-color: #fff;
+	transition: all .3s;
 	cursor: pointer;
 }
+.send-edit {
+	color: #26a69a;
+	border: 1px solid #26a69a;
+
+	&:hover {
+		color: #fff;
+		background-color: #26a69a;
+	}
+}
 .cancel-edit {
-	display: inline-block;
-	width: 100%;
-	max-width: 80px;
-	margin-top: 15px;
-	height: 30px;
-	border-radius: 5px;
-	font-size: 1rem;
-	font-weight: 700;
-	color: #fff;
-	text-transform: uppercase;
-	background-color: tomato;
-	cursor: pointer;
+	color: #E56F75;
+	border: 1px solid #E56F75;
+
+	&:hover {
+		color: #fff;
+		background-color: #E56F75;
+	}
 }
 </style>
