@@ -73,7 +73,7 @@ export default {
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
-		...mapMutations('winRecords', ['toggleVisible']),
+		...mapMutations('winRecords', ['toggleVisible', 'getAllRecords']),
 		sendRequest () {
 			const xhr = new XMLHttpRequest()
 			let formData = JSON.stringify({
@@ -91,6 +91,7 @@ export default {
 						answerArr: JSON.parse(xhr.responseText),
 						selectData: this.isSelectDate}
 					)
+					this.getAllRecords(JSON.parse(xhr.responseText))
 				}
 			}
 			xhr.open('POST', 'http://localhost:9595/created')

@@ -195,12 +195,16 @@ $transition-time: .3s;
 
 // ============================================= EDIT REC ===============================================
 .edit {
-	position: absolute;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	width: 100%;
 	background-color: #fff;
 	padding: 20px 15px;
 	z-index: 30;
 }
+
 .edit__title,
 .edit__desc {
 	display: block;
