@@ -19,6 +19,10 @@ const mutations = {
 	selectValue (state, id) {
 		state.selectVal = state.listValue[id].value
 		state.colorTitle = state.listValue[id].color
+	},
+	setDefaultEditVal (state, payload) {
+		state.selectVal = payload.value
+		state.colorTitle = payload.color
 	}
 }
 

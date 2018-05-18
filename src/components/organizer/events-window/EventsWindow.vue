@@ -9,7 +9,7 @@
 				<span>{{isSelectDate}}</span>
 			</h2>
 			<button
-				@click="toggleVisible()"
+				@click="closeWin()"
 				class="window__close-btn" ></button>
 		</div>
 		<!-- EventRecording -->
@@ -73,7 +73,7 @@ export default {
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
-		...mapMutations('winRecords', ['toggleVisible', 'getAllRecords']),
+		...mapMutations('winRecords', ['toggleVisible', 'getAllRecords', 'toggleVisEdit']),
 		sendRequest () {
 			const xhr = new XMLHttpRequest()
 			let formData = JSON.stringify({
@@ -98,10 +98,16 @@ export default {
 			xhr.send(formData)
 			this.newRecTitle = ''
 			this.newRecDesc = ''
+		},
+		closeWin () {
+			if (this.editWinVisible === true) {
+				this.toggleVisEdit()
+			}
+			this.toggleVisible()
 		}
 	},
 	computed: {
-		...mapState('winRecords', ['visible', 'eventsDataList']),
+		...mapState('winRecords', ['visible', 'eventsDataList', 'editWinVisible']),
 		...mapState('Select', ['selectVal', 'colorTitle']),
 		...mapGetters('calendar', ['isSelectDate']),
 		descLabelVisible () {
@@ -203,6 +209,7 @@ $focus-color: #26a69a;
 $focus-transition-timing: .3s;
 .add-rec {
 	margin: auto 30px 30px;
+	padding-top: 20px;
 	width: 70%;
 }
 .add-rec__title,

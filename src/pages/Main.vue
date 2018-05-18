@@ -222,11 +222,12 @@ $border-color: #fff;
 		border-right: 1px solid $border-color;
 		border-top: 1px solid $border-color;
 		opacity: .4;
+		overflow: hidden;
 		transition: all .3s;
 		cursor: pointer;
 	}
 	.cell--current-month.cell--active {
-		background: tomato;
+		background: rgba(255,255,255, .3);
 	}
 	.cell--current-month {
 		opacity: 1;

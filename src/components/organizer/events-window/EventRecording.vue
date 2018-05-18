@@ -10,44 +10,28 @@
 			:style="{background: recordingData.priority.prColor}"
 			class="recording__priority"></div>
 		<button
-				@click="toogleVisEdit()"
+				@click="showEditRec()"
 				class="recording__head-btn recording__head-btn--edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
 		<button
 				@click="deleteRecord(recordingData._id)"
 				class="recording__head-btn recording__head-btn--remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
 	</div>
-	<transition name="desc">
+	<transition name="desc-slide">
 		<div
 		v-show="showDescription"
 		class="recording__description">{{recordingData.desc}}</div>
 	</transition>
 	<!-- EDIT REC -->
-		<div
-			v-show="editWinVisible"
-			class="edit">
-			<input
-					v-model="editTitleVAl"
-					type="text" class="edit__title" name="edit-title">
-			<textarea
-					v-model="editDescVAl"
-					name="edit-desc" class="edit__desc"></textarea>
-			<div class="edit__btns-wrap">
-				<button
-					@click="editRec(recordingData._id)"
-					class="edit__btns send-edit">Edit</button>
-				<button
-						@click="toogleVisEdit()"
-						class="edit__btns cancel-edit">Cancel</button>
-			</div>
-		</div>
+	<edit-rec :editData="recordingData" />
 </div>
 </template>
 
 <script>
-// import {eventBus} from '../../../eventBus.js'
-import {mapGetters, mapActions} from 'vuex'
+import EditRec from '@/components/organizer/events-window/EditRec'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
 export default {
 	name: 'EventRecording',
+	components: {EditRec},
 	props: {
 		recordingData: {
 			type: Object
@@ -55,16 +39,22 @@ export default {
 	},
 	data () {
 		return {
-			showDescription: false,
-			editWinVisible: false,
-			editTitleVAl: this.recordingData.title,
-			editDescVAl: this.recordingData.desc
+			showDescription: false
 		}
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
+		...mapMutations('winRecords', ['toggleVisEdit', 'getAllRecords']),
+		...mapMutations('Select', ['setDefaultEditVal']),
 		toggleShowDesc () {
 			this.showDescription = !this.showDescription
+		},
+		showEditRec () {
+			this.setDefaultEditVal({
+				value: this.recordingData.priority.prVal,
+				color: this.recordingData.priority.prColor
+			})
+			this.toggleVisEdit()
 		},
 		deleteRecord (id) {
 			const xhr = new XMLHttpRequest()
@@ -77,37 +67,11 @@ export default {
 						answerArr: JSON.parse(xhr.responseText),
 						selectData: this.isSelectDate}
 					)
+					this.getAllRecords(JSON.parse(xhr.responseText))
 				}
 			}
 			xhr.open('POST', 'http://localhost:9595/rem-rec')
 			xhr.send(formData)
-		},
-		editRec (id) {
-			const xhr = new XMLHttpRequest()
-			let formData = JSON.stringify([
-				{
-					_id: id
-				},
-				{
-					date: this.isSelectDate,
-					title: this.editTitleVAl,
-					desc: this.editDescVAl
-				}
-			])
-			xhr.onreadystatechange = () => {
-				if (xhr.status === 200 && xhr.readyState === 4) {
-					this.doFilter({
-						answerArr: JSON.parse(xhr.responseText),
-						selectData: this.isSelectDate}
-					)
-					this.toogleVisEdit()
-				}
-			}
-			xhr.open('POST', 'http://localhost:9595/update')
-			xhr.send(formData)
-		},
-		toogleVisEdit () {
-			this.editWinVisible = !this.editWinVisible
 		}
 	},
 	computed: {
@@ -186,89 +150,20 @@ $transition-time: .3s;
 	background-color: #E56F75;
 }
 .recording__description {
+	max-height: 250px;
+	overflow-y: auto;
 	padding: 10px;
 	border: 1px solid $bd-color;
 	color: $text-color;
 	border-top: none;
 	transform-origin: top;
 }
-
-// ============================================= EDIT REC ===============================================
-.edit {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 100%;
-	background-color: #fff;
-	padding: 20px 15px;
-	z-index: 30;
+// animation description
+.desc-slide-enter-active,
+.desc-slide-leave-active {
+  transition: all .25s linear;
 }
-
-.edit__title,
-.edit__desc {
-	display: block;
-	width: 100%;
-	font-size: 1rem;
-	color: #333;
-	padding: 5px;
-	margin-top: 5px;
-	transition: all .25s;
+.desc-slide-enter, .desc-slide-leave-to {
+	max-height: 0;
 }
-
-.edit__title {
-	border: none;
-	border-bottom: 1px solid $bd-color;
-	&:focus {
-		color: #26a69a;
-		border-bottom: 1px solid #26a69a;
-	}
-}
-
-.edit__desc {
-	border: 1px solid $bd-color;
-	height: 150px;
-	overflow-y: auto;
-	&:focus {
-		color: #26a69a;
-		border: 1px solid #26a69a;
-	}
-}
-
-.edit__btns-wrap {
-	text-align: right;
-}
-
-.edit__btns  {
-	display: inline-block;
-	width: 100%;
-	max-width: 80px;
-	margin: 15px 10px;
-	height: 30px;
-	border-radius: 5px;
-	font-size: 1rem;
-	text-transform: capitalize;
-	background-color: #fff;
-	transition: all .3s;
-	cursor: pointer;
-}
-.send-edit {
-	color: #26a69a;
-	border: 1px solid #26a69a;
-
-	&:hover {
-		color: #fff;
-		background-color: #26a69a;
-	}
-}
-.cancel-edit {
-	color: #E56F75;
-	border: 1px solid #E56F75;
-
-	&:hover {
-		color: #fff;
-		background-color: #E56F75;
-	}
-}
-
 </style>

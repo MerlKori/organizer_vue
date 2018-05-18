@@ -1,17 +1,19 @@
 <template>
 <div id="app">
-	<router-view/>
+	<!-- Main -->
+	<main-page />
 </div>
 </template>
 
 <script>
+import MainPage from '@/pages/Main'
 export default {
-	name: 'App'
+	name: 'App',
+	components: {MainPage}
 }
 </script>
 
 <style>
-/* @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700'); */
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 #app {
 	-webkit-font-smoothing: antialiased;
