@@ -8,7 +8,7 @@
 
 <script>
 export default {
-	name: 'RecordLabel',
+	name: 'TaskLabels',
 	data () {
 		return {}
 	}
@@ -16,14 +16,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$size-label: 22px;
+$size-label: 4px;
 .labels__wrap {
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
-	width: 100%;
-	height: 30px;
+	display: flex;
+	justify-content: center;
 	align-items: center;
+	width: 100%;
 
 	&.rec--low .label--low {
 		opacity: 1;
@@ -36,27 +37,19 @@ $size-label: 22px;
 	}
 }
 .labels {
+	width: $size-label;
+	height: $size-label;
+	border-radius: 50%;
+	margin: 1px 2px;
 	opacity: 0;
-	position: absolute;
-	width: 20px;
-	transform: rotate(-45deg);
 }
 .label--low {
-	bottom: -40%;
-	left: -2%;
-	height: 50px;
-	background-color: #42A645;
+	background-color: var(--green);
 }
 .label--medium {
-	bottom: -70%;
-	left: 2%;
-	height: 100px;
-	background-color: #F9C120;
+	background-color: var(--yellow);
 }
 .label--highest {
-	bottom: -100%;
-	left: 5%;
-	height: 160px;
-	background-color: #D23949;
+	background-color: var(--red);
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
 <transition name="recWin">
-<div v-show="this.visible">
+<div>
 	<div
 		class="events-window">
 		<div class="events-window__header">
@@ -73,7 +73,7 @@ export default {
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
-		...mapMutations('winRecords', ['toggleVisible', 'getAllRecords', 'toggleVisEdit']),
+		...mapMutations('winRecords', ['getAllRecords', 'toggleVisEdit']),
 		sendRequest () {
 			const xhr = new XMLHttpRequest()
 			let formData = JSON.stringify({
@@ -103,11 +103,10 @@ export default {
 			if (this.editWinVisible === true) {
 				this.toggleVisEdit()
 			}
-			this.toggleVisible()
 		}
 	},
 	computed: {
-		...mapState('winRecords', ['visible', 'eventsDataList', 'editWinVisible']),
+		...mapState('winRecords', ['eventsDataList', 'editWinVisible']),
 		...mapState('Select', ['selectVal', 'colorTitle']),
 		...mapGetters('calendar', ['isSelectDate']),
 		descLabelVisible () {

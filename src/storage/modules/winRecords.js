@@ -1,14 +1,10 @@
 const state = {
-	visible: false,
 	editWinVisible: false,
 	eventsDataList: [],
 	allRecords: []
 }
 
 const mutations = {
-	toggleVisible (state) {
-		state.visible = !state.visible
-	},
 	filterRecords (state, payload) {
 		state.eventsDataList = []
 		state.eventsDataList = payload.answerArr.filter(item => {

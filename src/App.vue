@@ -1,15 +1,20 @@
 <template>
 <div id="app">
 	<!-- Main -->
-	<main-page />
+	<!-- <main-page /> -->
+	<!-- Organizer -->
+	<organizer />
+	<app-background />
 </div>
 </template>
 
 <script>
 import MainPage from '@/pages/Main'
+import AppBackground from '@/pages/AppBackground'
+import Organizer from '@/pages/Organizer'
 export default {
 	name: 'App',
-	components: {MainPage}
+	components: {MainPage, AppBackground, Organizer}
 }
 </script>
 
@@ -64,7 +69,6 @@ html {
 }
 
 body {
-	/* font-family: 'Roboto Condensed', sans-serif; */
 	font-family: 'Open Sans', sans-serif;
 	font-size: 1rem;
 	font-weight: 400;
@@ -79,6 +83,21 @@ input:-webkit-autofill {
 	box-shadow: inset 0 0 0 80px rgba(255,255,255, 1) !important;
 	color: #fff !important;
 	-webkit-text-fill-color: #fff !important;
+}
+</style>
+
+<style>
+/* ======================  variables ================================ */
+:root {
+	--noActive-color: rgba(255,255,255, .7);
+	--border: 1px solid var(--noActive-color);
+	--text-color-whithe: rgba(255,255,255, 1);
+	--text-color-dark: rgba(0,0,0, 1);
+	--bg-dark: rgba(0, 0, 0, .4);
+	--red: #D23949;
+	--green: #42A645;
+	--yellow: #F9C120;
+
 }
 </style>
 

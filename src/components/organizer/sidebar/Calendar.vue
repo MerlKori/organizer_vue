@@ -1,45 +1,42 @@
 <template>
-<div class="organizer__wrapp">
-	<!-- OrganizerHeader -->
-	<organizer-header
+<div >
+	<!-- CalendarHeader -->
+	<calendar-header
 		@showPrewMonth="prewMonth()"
 		@showNextMonth="nexMonth()"
-		@showCurrentDate="returnToday()"
 	/>
-	<main>
-		<ul class="days-list">
-			<li
-				v-for="(title, index) in calendarData.daysTitle"
-				:key="index"
-			>
-			{{title}}
-			</li>
-		</ul>
-		<ul class="calendar" id="calendar">
-			<transition-group name="list">
-			<li
-				v-for="(val, index) in calendarItem"
-				:key="index"
-				:class="{'cell--active': isActiveCell(index), 'cell--current-month': isCurrentMonth(index)}"
-				@click="changeDay(index)"
-			>
-			{{val}}
-			</li>
-			</transition-group>
-		</ul>
-	</main>
-	<!-- EventsWindow -->
-	<events-window :dataCalendar="calendarData"/>
+	<ul class="calendar__days-list">
+		<li
+			v-for="(title, index) in calendarData.daysTitle"
+			:key="index"
+		>
+		{{title}}
+		</li>
+	</ul>
+	<ul class="calendar" id="calendar">
+		<li
+			v-for="(val, index) in calendarItem"
+			:key="index"
+			:class="{'cell--active': isActiveCell(index), 'cell--current-month': isCurrentMonth(index)}"
+			@click="changeDay(index)"
+		>
+		{{val}}
+		<!-- TaskLabels -->
+		<task-labels
+			:class="{'rec--low': showRecLow(index, val, listValue[0].value), 'rec--med': showRecLow(index, val, listValue[1].value), 'rec--hig': showRecLow(index, val, listValue[2].value)}"
+		/>
+		</li>
+	</ul>
 </div>
 </template>
 
 <script>
 import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
-import OrganizerHeader from '@/components/organizer/OrganizerHeader'
-import EventsWindow from '@/components/organizer/events-window/EventsWindow'
+import CalendarHeader from '@/components/organizer/sidebar/CalendarHeader'
+import TaskLabels from '@/components/organizer/sidebar/TaskLabels'
 export default {
-	name: 'Main',
-	components: {OrganizerHeader, EventsWindow},
+	name: 'Calendar',
+	components: {CalendarHeader, TaskLabels},
 	data () {
 		return {
 			calendarData: {
@@ -180,51 +177,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// ============= variaqbles ===========
-$border-color: #fff;
-
-.organizer__wrapp {
-	height: 100vh;
-	background: linear-gradient(to bottom, #0d47a1 , #1565c0, #1976d2);
-}
 // ================= days-list ===============================
-.days-list {
+.calendar__days-list {
 	display: flex;
 
 	li {
-		font-size: 1.25rem;
-		font-weight: 700;
+		font-size: .7rem;
+		font-weight: 500;
 		color: #fff;
 		padding: .5rem 0;
 		text-align: center;
 		width: calc(100% / 7);
 	}
 }
-// ============ calendar ========
-// .calendar span {
-// 	display: flex;
-// 	flex-wrap: wrap;
+// =============================== calendar ================================
+.calendar {
+	display: flex;
+	flex-wrap: wrap;
 
-// 	li {
-// 		position: relative;
-// 		font-size: 1.25rem;
-// 		color: #fff;
-// 		width: calc(100% / 7);
-// 		height: calc((100vh - 95.6px) / 6);
-// 		padding: 10px 0 0 10px;
-// 		border-right: 1px solid $border-color;
-// 		border-top: 1px solid $border-color;
-// 		opacity: .4;
-// 		overflow: hidden;
-// 		transition: all .3s;
-// 		cursor: pointer;
-// 	}
-// 	.cell--current-month.cell--active {
-// 		background: rgba(255,255,255, .3);
-// 	}
-// 	.cell--current-month {
-// 		opacity: 1;
-// 		border: 1px solid $border-color;
-// 	}
-// }
+	li {
+		position: relative;
+		font-size: 1rem;
+		color: #fff;
+		width: calc(100% / 7);
+		border-radius: 5px;
+		padding: 5px;
+		opacity: .4;
+		overflow: hidden;
+		text-align: center;
+		transition: all .3s;
+		cursor: pointer;
+	}
+	.cell--current-month.cell--active {
+		background: rgba(255,255,255, .3);
+	}
+	.cell--current-month {
+		opacity: 1;
+	}
+}
 </style>
