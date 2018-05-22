@@ -91,7 +91,7 @@ input:-webkit-autofill {
 	--text-color-whithe: rgba(255,255,255, 1);
 	--text-color-dark: rgba(0,0,0, 1);
 	--bg-dark: rgba(0, 0, 0, .4);
-	--red: #D23949;
+	--red: #ff3d00;
 	--green: #42A645;
 	--yellow: #F9C120;
 

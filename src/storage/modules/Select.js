@@ -9,7 +9,7 @@ const state = {
 	},
 	{
 		value: 'Highest',
-		color: '#D23949'
+		color: '#ff3d00'
 	}],
 	selectVal: 'Low',
 	colorTitle: '#42A645'

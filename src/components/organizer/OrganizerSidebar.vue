@@ -2,15 +2,17 @@
 <div class="sidebar">
 	<!-- Calendar -->
 	<calendar />
+	<!-- Clock -->
+	<clock />
 </div>
 </template>
 
 <script>
-// import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
 import Calendar from '@/components/organizer/sidebar/Calendar'
+import Clock from '@/components/organizer/sidebar/Clock'
 export default {
 	name: 'OrganizerSidebar',
-	components: {Calendar},
+	components: {Calendar, Clock},
 	data () {
 		return {}
 	}
@@ -19,6 +21,8 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
+	display: flex;
+	flex-direction: column;
 	width: 30%;
 	max-width: 350px;
 	background-color: var(--bg-dark);
