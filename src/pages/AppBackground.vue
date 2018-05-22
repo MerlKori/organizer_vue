@@ -17,11 +17,11 @@ export default {
 		return {
 			Date: new Date().getSeconds(),
 			imagesName: ['morning1.jpg', 'morning2.jpg', 'morning3.jpg', 'day1.jpg', 'day2.jpg', 'day3.jpg', 'night1.jpg', 'night2.jpg', 'night3.jpg'],
-			imageActive: 0
+			imageActive: 3
 		}
 	},
 	created () {
-		this.setActiveImg()
+		// this.setActiveImg()
 		setInterval(() => {
 			this.setActiveImg()
 		}, 2700000)

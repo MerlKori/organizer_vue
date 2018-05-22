@@ -27,7 +27,7 @@
 import {mapGetters, mapActions, mapState, mapMutations} from 'vuex'
 import PrioritySelect from '@/components/organizer/events-window/PrioritySelect'
 export default {
-	name: 'EditRec',
+	name: 'EditTask',
 	components: {PrioritySelect},
 	props: {
 		editData: {

@@ -2,46 +2,37 @@
 <div
 	:class="{'task-item--active': isActive}"
 	class="task-item">
-	<div class="task-item__head">
+	<div
+		:style="{borderBottom: `2px solid ${recordingData.priority.prColor}`}"
+		class="task-item__head">
 		<h3
 			@click="toggleShowDesc()"
 			class="task-item__title">{{recordingData.title}}</h3>
 		<div
 			:style="{background: recordingData.priority.prColor}"
 			class="task-item__priority"></div>
-		<div class="task-item__menu">
-			<button
-				@click="showEditRec()"
-				class="task-item__head-btn task-item__head-btn--edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
-			<button
-					@click="deleteRecord(recordingData._id)"
-					class="task-item__head-btn task-item__head-btn--remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
-			<button
-				@click="toggleVisMenu()"
-				:class="{'btn--active': menuVisible}"
-				class="task-item__menu-btn">
-					<span class="btn-line1"></span>
-					<span class="btn-line2"></span>
-					<span class="btn-line3"></span>
-			</button>
-		</div>
+		<button
+			@click="showEditRec()"
+			class="task-item__head-btn task-item__head-btn--edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
+		<button
+				@click="deleteRecord(recordingData._id)"
+				class="task-item__head-btn task-item__head-btn--remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
 	</div>
-	<transition name="desc-slide">
-		<div
+	<div
 		v-show="showDescription"
-		class="task-item__description">{{recordingData.desc}}</div>
-	</transition>
-	<!-- EDIT REC -->
-	<edit-rec :editData="recordingData" />
+		class="task-item__description"
+	>{{recordingData.desc}}</div>
+	<!-- EditTask -->
+	<edit-task :editData="recordingData" />
 </div>
 </template>
 
 <script>
-import EditRec from '@/components/organizer/events-window/EditRec'
+import EditTask from '@/components/organizer/task-win/EditTask'
 import {mapGetters, mapActions, mapMutations} from 'vuex'
 export default {
 	name: 'TaskItem',
-	components: {EditRec},
+	components: {EditTask},
 	props: {
 		recordingData: {
 			type: Object
@@ -49,8 +40,7 @@ export default {
 	},
 	data () {
 		return {
-			showDescription: false,
-			menuVisible: false
+			showDescription: false
 		}
 	},
 	methods: {
@@ -83,9 +73,6 @@ export default {
 			}
 			xhr.open('POST', 'http://localhost:9595/rem-rec')
 			xhr.send(formData)
-		},
-		toggleVisMenu () {
-			this.menuVisible = !this.menuVisible
 		}
 	},
 	computed: {
@@ -115,16 +102,19 @@ $transition-time: .3s;
 		border-bottom: 1px solid $active-color;
 	}
 	.task-item__title {
-		color: #fff;
+		color: rgba(38,166,154, .8);
 	}
 	.task-item__description {
+		background-color: rgba(38,166,154, .5);
+		color: #fff;
+		padding: 5px;
 		border: 1px solid $active-color;
 		border-top: none;
 	}
 }
 .task-item__head {
 	display: flex;
-	border-bottom: 1px solid $bd-color;
+	margin-top: 5px;
 	transition: border-bottom $transition-time, background-color .25s;
 
 	&:hover {
@@ -134,16 +124,19 @@ $transition-time: .3s;
 .task-item__title {
 	font-size: 1rem;
 	padding: 5px 10px;
-	color: $text-color;
+	color: rgba(0,0,0, .6);
+	font-weight: 700;
 	flex-grow: 1;
 	cursor: pointer;
 }
+
 .task-item__head-btn {
 	width: 30px;
 	height: 30px;
 	text-align: center;
-	transition: filter .3s;
-	display: none;
+	border-radius: 3px;
+	margin: 1px;
+	transition: all .3s;
 	cursor: pointer;
 
 	&:hover {
@@ -154,64 +147,10 @@ $transition-time: .3s;
 		vertical-align: middle;
 	}
 }
-// .task-item__priority {
-// 	width: 30px;
-// 	height: 30px;
-// }
-// item menu
-.task-item__menu {
-	display: flex;
-	align-items: center;
+.task-item__head-btn--remove {
+	background-color: rgba(243, 7, 11, 0.6);
 }
-.task-item__menu-btn {
-	position: relative;
-	width: 30px;
-	height: 30px;
-	overflow: hidden;
-	background-color: transparent;
-	transition: .5s ease-in-out;
-	cursor: pointer;
-
-	span {
-		position: absolute;
-		left: 0;
-		display: block;
-		width: 100%;
-		height: 3px;
-		background: rgba(38,166,154, .8);
-		border-radius: 10px;
-		transition: all 0.35s;
-		pointer-events: none;
-	}
-	.btn-line1 {
-		top: 4px;
-	}
-	.btn-line2 {
-		top: 14px;
-	}
-	.btn-line3 {
-		top: 24px;
-	}
-}
-.task-item__menu-btn.btn--active {
-	span.btn-line1 {
-		top: 14px;
-		transform: rotate(45deg);
-	}
-	span.btn-line2 {
-		left: -100%;
-	}
-	span.btn-line3 {
-		top: 14px;
-		transform: rotate(-45deg);
-	}
-}
-// animation description
-.desc-slide-enter-active,
-.desc-slide-leave-active {
-  transition: all .25s linear;
-}
-.desc-slide-enter, .desc-slide-leave-to {
-	max-height: 0;
+.task-item__head-btn--edit {
+	background-color: rgba(44,192,39, 0.7);
 }
 </style>
