@@ -1,37 +1,45 @@
 <template>
-<transition name="slideUp">
-	<div
-		v-show="editWinVisible"
-		class="edit">
-		<input
-				v-model="editTitleVAl"
-				type="text" class="edit__title" name="edit-title">
-		<textarea
-				v-model="editDescVAl"
-				name="edit-desc" class="edit__desc"></textarea>
-		<!-- PrioritySelect -->
-		<priority-select />
-		<div class="edit__btns-wrap">
-			<button
-				@click="editRec(editData._id)"
-				class="edit__btns send-edit">Edit</button>
-			<button
-					@click="toggleVisEdit()"
-					class="edit__btns cancel-edit">Cancel</button>
+	<div>
+		<transition name="slideUp">
+		<div
+			v-show="visibility"
+			class="edit">
+			<input
+					v-model="editTitleVAl"
+					type="text" class="edit__title" name="edit-title">
+			<textarea
+					v-model="editDescVAl"
+					name="edit-desc" class="edit__desc"></textarea>
+			<!-- PrioritySelect -->
+			<priority-select />
+			<div class="edit__btns-wrap">
+				<button
+					@click="editRec(editData._id)"
+					class="edit__btns send-edit">Edit</button>
+				<button
+						@click="closeWin()"
+						class="edit__btns cancel-edit">Cancel</button>
+			</div>
 		</div>
+		</transition>
+		<transition name="fade">
+		<div v-show="visibility" class="edit-win__overlay"></div>
+		</transition>
 	</div>
-</transition>
 </template>
 
 <script>
 import {mapGetters, mapActions, mapState, mapMutations} from 'vuex'
-import PrioritySelect from '@/components/organizer/events-window/PrioritySelect'
+import PrioritySelect from '@/components/organizer/task-win/PrioritySelect'
 export default {
 	name: 'EditTask',
 	components: {PrioritySelect},
 	props: {
 		editData: {
 			type: Object
+		},
+		visibility: {
+			type: Boolean
 		}
 	},
 	data () {
@@ -43,6 +51,9 @@ export default {
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
 		...mapMutations('winRecords', ['toggleVisEdit', 'getAllRecords']),
+		closeWin () {
+			this.$emit('closeUp')
+		},
 		editRec (id) {
 			const xhr = new XMLHttpRequest()
 			let formData = JSON.stringify([
@@ -66,7 +77,7 @@ export default {
 						selectData: this.isSelectDate}
 					)
 					this.getAllRecords(JSON.parse(xhr.responseText))
-					this.toggleVisEdit()
+					this.closeWin()
 				}
 			}
 			xhr.open('POST', 'http://localhost:9595/update')
@@ -82,7 +93,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$bd-color: #9e9e9e;
+$bd-color: rgba(255,255,255, .8);
 $text-color: rgba(0,0,0, .8);
 $active-color: #26a69a;
 $transition-time: .3s;
@@ -92,10 +103,10 @@ $transition-time: .3s;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 100%;
-	height: 100%;
-	background-color: #fff;
+	max-width: 600px;
+	background-color: rgba(255,255,255, .2);
 	padding: 20px 15px;
-	z-index: 30;
+	z-index: 40;
 	transition: transform .6s, opacity .3s;
 }
 
@@ -113,9 +124,12 @@ $transition-time: .3s;
 .edit__title {
 	border: none;
 	border-bottom: 1px solid $bd-color;
+	background: rgba(255,255,255, 0);
+	color: #fff;
 	&:focus {
 		color: #26a69a;
 		border-bottom: 1px solid #26a69a;
+		background: rgba(0,0,0, .4);
 	}
 }
 
@@ -123,9 +137,12 @@ $transition-time: .3s;
 	border: 1px solid $bd-color;
 	height: 250px;
 	overflow-y: auto;
+	background: rgba(255,255,255, 0);
+	color: #fff;
 	&:focus {
 		color: #26a69a;
 		border: 1px solid #26a69a;
+		background: rgba(0,0,0, .4);
 	}
 }
 
@@ -142,7 +159,7 @@ $transition-time: .3s;
 	border-radius: 5px;
 	font-size: 1rem;
 	text-transform: capitalize;
-	background-color: #fff;
+	background-color: rgba(255,255,255, 0);
 	transition: all .3s;
 	cursor: pointer;
 }
@@ -164,6 +181,16 @@ $transition-time: .3s;
 		background-color: #E56F75;
 	}
 }
+// overlay
+.edit-win__overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(0,0,0, .7);
+	z-index: 35;
+}
 // animation
 .slideUp-enter-active, .slideUp-leave-active {
 	transition: transform .6s, opacity .3s;
@@ -171,5 +198,11 @@ $transition-time: .3s;
 .slideUp-enter, .slideUp-leave-to {
 	opacity: 0;
 	transform: translate(-50%, -150%);
+}
+.fade-enter-active, .fade-leave-active {
+	transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to {
+	opacity: 0;
 }
 </style>

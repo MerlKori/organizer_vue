@@ -20,6 +20,7 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
 	width: 30%;
+	max-width: 350px;
 	background-color: var(--bg-dark);
 }
 </style>

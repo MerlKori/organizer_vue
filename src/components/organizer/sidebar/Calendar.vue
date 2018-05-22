@@ -201,7 +201,8 @@ export default {
 		color: #fff;
 		width: calc(100% / 7);
 		border-radius: 5px;
-		padding: 5px;
+		padding: 13px 5px;
+		margin: 2px 0;
 		opacity: .4;
 		overflow: hidden;
 		text-align: center;

@@ -1,5 +1,4 @@
 const state = {
-	editWinVisible: false,
 	eventsDataList: [],
 	allRecords: []
 }
@@ -15,9 +14,6 @@ const mutations = {
 	},
 	getAllRecords (state, arr) {
 		state.allRecords = arr
-	},
-	toggleVisEdit (state) {
-		state.editWinVisible = !state.editWinVisible
 	}
 }
 

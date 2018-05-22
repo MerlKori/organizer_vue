@@ -86,7 +86,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapState('winRecords', ['eventsDataList', 'editWinVisible']),
+		...mapState('winRecords', ['eventsDataList']),
 		...mapState('Select', ['selectVal', 'colorTitle']),
 		...mapGetters('calendar', ['isSelectDate']),
 		descLabelVisible () {

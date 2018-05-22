@@ -1,7 +1,5 @@
 <template>
 <div id="app">
-	<!-- Main -->
-	<!-- <main-page /> -->
 	<!-- Organizer -->
 	<organizer />
 	<app-background />
@@ -9,12 +7,11 @@
 </template>
 
 <script>
-import MainPage from '@/pages/Main'
 import AppBackground from '@/pages/AppBackground'
 import Organizer from '@/pages/Organizer'
 export default {
 	name: 'App',
-	components: {MainPage, AppBackground, Organizer}
+	components: {AppBackground, Organizer}
 }
 </script>
 

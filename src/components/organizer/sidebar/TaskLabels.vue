@@ -19,7 +19,7 @@ export default {
 $size-label: 4px;
 .labels__wrap {
 	position: absolute;
-	bottom: 0px;
+	bottom: 5px;
 	left: 0px;
 	display: flex;
 	justify-content: center;
@@ -40,7 +40,7 @@ $size-label: 4px;
 	width: $size-label;
 	height: $size-label;
 	border-radius: 50%;
-	margin: 1px 2px;
+	margin: 1px 3px;
 	opacity: 0;
 }
 .label--low {

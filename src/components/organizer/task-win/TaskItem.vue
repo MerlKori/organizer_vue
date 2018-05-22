@@ -12,7 +12,7 @@
 			:style="{background: recordingData.priority.prColor}"
 			class="task-item__priority"></div>
 		<button
-			@click="showEditRec()"
+			@click="toggleEditWin()"
 			class="task-item__head-btn task-item__head-btn--edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
 		<button
 				@click="deleteRecord(recordingData._id)"
@@ -23,7 +23,10 @@
 		class="task-item__description"
 	>{{recordingData.desc}}</div>
 	<!-- EditTask -->
-	<edit-task :editData="recordingData" />
+	<edit-task
+		@closeUp="toggleEditWin()"
+		:visibility="showEditWin"
+		:editData="recordingData" />
 </div>
 </template>
 
@@ -40,22 +43,19 @@ export default {
 	},
 	data () {
 		return {
-			showDescription: false
+			showDescription: false,
+			showEditWin: false
 		}
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
-		...mapMutations('winRecords', ['toggleVisEdit', 'getAllRecords']),
+		...mapMutations('winRecords', ['getAllRecords']),
 		...mapMutations('Select', ['setDefaultEditVal']),
 		toggleShowDesc () {
 			this.showDescription = !this.showDescription
 		},
-		showEditRec () {
-			this.setDefaultEditVal({
-				value: this.recordingData.priority.prVal,
-				color: this.recordingData.priority.prColor
-			})
-			this.toggleVisEdit()
+		toggleEditWin () {
+			this.showEditWin = !this.showEditWin
 		},
 		deleteRecord (id) {
 			const xhr = new XMLHttpRequest()
@@ -95,6 +95,7 @@ $text-color: rgba(0,0,0, .8);
 $active-color: #26a69a;
 $transition-time: .3s;
 .task-item {
+	max-width: 950px;
 	position: relative;
 }
 .task-item--active {
@@ -133,6 +134,7 @@ $transition-time: .3s;
 .task-item__head-btn {
 	width: 30px;
 	height: 30px;
+	line-height: 37px;
 	text-align: center;
 	border-radius: 3px;
 	margin: 1px;
@@ -141,10 +143,6 @@ $transition-time: .3s;
 
 	&:hover {
 		filter: brightness(130%);
-	}
-
-	img {
-		vertical-align: middle;
 	}
 }
 .task-item__head-btn--remove {
