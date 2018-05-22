@@ -32,7 +32,7 @@
 
 <script>
 import EditTask from '@/components/organizer/task-win/EditTask'
-import {mapGetters, mapActions, mapMutations} from 'vuex'
+import {mapGetters, mapActions, mapMutations, mapState} from 'vuex'
 export default {
 	name: 'TaskItem',
 	components: {EditTask},
@@ -45,6 +45,13 @@ export default {
 		return {
 			showDescription: false,
 			showEditWin: false
+		}
+	},
+	watch: {
+		flagTaskItem: function () {
+			if (this.showDescription === true) {
+				this.toggleShowDesc()
+			}
 		}
 	},
 	methods: {
@@ -77,6 +84,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('calendar', ['isSelectDate']),
+		...mapState('winRecords', ['flagTaskItem']),
 		isActive () {
 			if (this.showDescription === true) {
 				return true
@@ -95,7 +103,6 @@ $text-color: rgba(0,0,0, .8);
 $active-color: #26a69a;
 $transition-time: .3s;
 .task-item {
-	max-width: 950px;
 	position: relative;
 }
 .task-item--active {

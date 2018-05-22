@@ -56,7 +56,7 @@ export default {
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
-		...mapMutations('winRecords', ['getAllRecords']),
+		...mapMutations('winRecords', ['getAllRecords', 'toggleFlag']),
 		...mapMutations('calendar', ['showPrewMonth', 'showNexMonth', 'goTodaytDate', 'defaultSelectDate']),
 		initCalendarData () {
 			this.defaultSelectDate()
@@ -141,6 +141,7 @@ export default {
 				answerArr: this.allRecords,
 				selectData: this.isSelectDate}
 			)
+			this.toggleFlag()
 		},
 		loadRecords () {
 			const xhr = new XMLHttpRequest()

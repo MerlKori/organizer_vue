@@ -1,4 +1,5 @@
 const state = {
+	flagTaskItem: false,
 	eventsDataList: [],
 	allRecords: []
 }
@@ -14,6 +15,9 @@ const mutations = {
 	},
 	getAllRecords (state, arr) {
 		state.allRecords = arr
+	},
+	toggleFlag (state) {
+		state.flagTaskItem = !state.flagTaskItem
 	}
 }
 

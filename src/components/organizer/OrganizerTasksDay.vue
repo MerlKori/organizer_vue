@@ -1,5 +1,6 @@
 <template>
 <div class="task-window">
+	<div class="task-window__title">Tasks for <span>{{isSelectDate}}</span></div>
 	<!-- TaskItem -->
 	<task-item
 		v-for="(el, index) in eventsDataList"
@@ -114,6 +115,12 @@ export default {
 	flex-grow: 1;
 	padding: 15px;
 	background-color: rgba(255,255,255,0.1);
+}
+.task-window__title {
+	font-size: 2rem;
+	padding: 5px 20px;
+	margin: 10px 0 60px;
+	border-bottom: 1px solid #000;
 }
 
 // ============================================= add events =========================================================

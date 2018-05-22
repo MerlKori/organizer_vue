@@ -16,12 +16,12 @@ export default {
 	data () {
 		return {
 			Date: new Date().getSeconds(),
-			imagesName: ['morning1.jpg', 'morning2.jpg', 'morning3.jpg', 'day1.jpg', 'day2.jpg', 'day3.jpg', 'night1.jpg', 'night2.jpg', 'night3.jpg'],
-			imageActive: 3
+			imagesName: ['morning.jpg', 'day.jpg', 'evening.jpg', 'night.jpg'],
+			imageActive: 0
 		}
 	},
 	created () {
-		// this.setActiveImg()
+		this.setActiveImg()
 		setInterval(() => {
 			this.setActiveImg()
 		}, 2700000)
@@ -36,24 +36,15 @@ export default {
 		},
 		setActiveImg () {
 			let hours = new Date().getHours()
-			if (hours > 6 && hours < 7) {
+
+			if (hours > 0 && hours < 9) {
 				this.imageActive = 0
-			} else if (hours > 7 && hours < 8) {
+			} else if (hours > 9 && hours < 16) {
 				this.imageActive = 1
-			} else if (hours > 8 && hours < 9) {
+			} else if (hours > 16 && hours < 20) {
 				this.imageActive = 2
-			} else if (hours > 9 && hours < 10) {
-				this.imageActive = 3
-			} else if (hours > 10 && hours < 17) {
-				this.imageActive = 4
-			} else if (hours > 17 && hours < 18) {
-				this.imageActive = 5
-			} else if (hours > 18 && hours < 20) {
-				this.imageActive = 6
 			} else if (hours > 20 && hours < 24) {
-				this.imageActive = 7
-			} else {
-				this.imageActive = 8
+				this.imageActive = 3
 			}
 		}
 	}
