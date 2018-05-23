@@ -2,6 +2,8 @@
 <div class="sidebar">
 	<!-- Calendar -->
 	<calendar />
+	<!-- Weather -->
+	<weather />
 	<!-- Clock -->
 	<clock />
 </div>
@@ -9,10 +11,11 @@
 
 <script>
 import Calendar from '@/components/organizer/sidebar/Calendar'
+import Weather from '@/components/organizer/sidebar/Weather'
 import Clock from '@/components/organizer/sidebar/Clock'
 export default {
 	name: 'OrganizerSidebar',
-	components: {Calendar, Clock},
+	components: {Calendar, Clock, Weather},
 	data () {
 		return {}
 	}

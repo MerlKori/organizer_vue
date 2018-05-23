@@ -129,8 +129,10 @@ $deactive-color: rgba(255,255,255, .65);
 $focus-transition-timing: .3s;
 .add-task {
 	margin: auto 30px 30px;
-	padding-top: 20px;
+	padding: 25px 10px 15px;
 	width: 70%;
+	background-color: rgba(255,255,255, .1);
+	border-radius: 5px;
 }
 .add-task__title,
 .add-task__decs {

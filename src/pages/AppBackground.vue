@@ -37,11 +37,11 @@ export default {
 		setActiveImg () {
 			let hours = new Date().getHours()
 
-			if (hours > 0 && hours < 9) {
+			if (hours >= 0 && hours <= 9) {
 				this.imageActive = 0
-			} else if (hours > 9 && hours < 16) {
+			} else if (hours > 9 && hours <= 16) {
 				this.imageActive = 1
-			} else if (hours > 16 && hours < 20) {
+			} else if (hours > 16 && hours <= 20) {
 				this.imageActive = 2
 			} else if (hours > 20 && hours < 24) {
 				this.imageActive = 3

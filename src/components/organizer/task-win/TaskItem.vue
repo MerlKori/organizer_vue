@@ -104,6 +104,7 @@ $active-color: #26a69a;
 $transition-time: .3s;
 .task-item {
 	position: relative;
+	max-width: 960px;
 }
 .task-item--active {
 	.task-item__head {
