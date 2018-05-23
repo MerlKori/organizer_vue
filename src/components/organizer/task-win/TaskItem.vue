@@ -78,11 +78,12 @@ export default {
 					this.getAllRecords(JSON.parse(xhr.responseText))
 				}
 			}
-			xhr.open('POST', 'http://localhost:9595/rem-rec')
+			xhr.open('POST', `${this.urlServer}rem-rec`)
 			xhr.send(formData)
 		}
 	},
 	computed: {
+		...mapState(['urlServer']),
 		...mapGetters('calendar', ['isSelectDate']),
 		...mapState('winRecords', ['flagTaskItem']),
 		isActive () {

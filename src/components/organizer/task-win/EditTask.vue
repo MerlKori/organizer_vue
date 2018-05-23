@@ -80,11 +80,12 @@ export default {
 					this.closeWin()
 				}
 			}
-			xhr.open('POST', 'http://localhost:9595/update')
+			xhr.open('POST', `${this.urlServer}update`)
 			xhr.send(formData)
 		}
 	},
 	computed: {
+		...mapState(['urlServer']),
 		...mapGetters('calendar', ['isSelectDate']),
 		...mapState('winRecords', ['editWinVisible']),
 		...mapState('Select', ['selectVal', 'colorTitle'])

@@ -75,13 +75,14 @@ export default {
 					this.getAllRecords(JSON.parse(xhr.responseText))
 				}
 			}
-			xhr.open('POST', 'http://localhost:9595/created')
+			xhr.open('POST', `${this.urlServer}created`)
 			xhr.send(formData)
 			this.newTaskTitle = ''
 			this.newTaskDesc = ''
 		}
 	},
 	computed: {
+		...mapState(['urlServer']),
 		...mapState('winRecords', ['eventsDataList']),
 		...mapState('Select', ['selectVal', 'colorTitle']),
 		...mapGetters('calendar', ['isSelectDate']),

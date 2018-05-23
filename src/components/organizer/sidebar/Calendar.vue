@@ -178,7 +178,7 @@ export default {
 					callback()
 				}
 			}
-			xhr.open('POST', 'http://localhost:9595/find-all-rec')
+			xhr.open('POST', `${this.urlServer}find-all-rec`)
 			xhr.send(formData)
 		},
 		showRecLow (id, elVal, priority) {
@@ -194,6 +194,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapState(['urlServer']),
 		...mapState('calendar', ['todayDate', 'selectDate', 'monthTitle']),
 		...mapState('winRecords', ['allRecords']),
 		...mapState('Select', ['listValue']),

@@ -7,6 +7,9 @@ import Select from './modules/Select'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+	state: {
+		urlServer: 'https://stark-sea-83984.herokuapp.com/'
+	},
 	modules: {
 		winRecords,
 		calendar,
