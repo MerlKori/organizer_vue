@@ -126,10 +126,18 @@ export default {
 		prewMonth () {
 			this.showPrewMonth()
 			this.createCalendar()
+			this.doFilter({
+				answerArr: this.allRecords,
+				selectData: this.isSelectDate}
+			)
 		},
 		nexMonth () {
 			this.showNexMonth()
 			this.createCalendar()
+			this.doFilter({
+				answerArr: this.allRecords,
+				selectData: this.isSelectDate}
+			)
 		},
 		changeDay (index) {
 			this.selectDate.day = this.calendarItem[index]
