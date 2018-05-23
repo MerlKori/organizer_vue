@@ -30,7 +30,7 @@ export default {
 					this.weatherData = JSON.parse(xhr.responseText)
 				}
 			}
-			xhr.open('GET', 'http://api.openweathermap.org/data/2.5/weather?id=703448&units=metric&appid=d23141099f269b69643175e5ed4499b3')
+			xhr.open('GET', 'https://api.openweathermap.org/data/2.5/weather?id=703448&units=metric&appid=d23141099f269b69643175e5ed4499b3')
 			xhr.send()
 		}
 	},
