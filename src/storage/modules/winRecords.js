@@ -24,7 +24,6 @@ const mutations = {
 const actions = {
 	doFilter ({commit}, payload) {
 		commit('filterRecords', payload)
-		console.log(state.eventsDataList)
 	}
 }
 

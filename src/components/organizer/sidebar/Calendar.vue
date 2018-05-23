@@ -27,6 +27,13 @@
 		/>
 		</li>
 	</ul>
+	<div
+		@click="returnToday()"
+		class="calendar__tpday-date">
+		<span>Today is:</span>
+		<br>
+		<span>{{isTodayDate}}</span>
+	</div>
 </div>
 </template>
 
@@ -53,7 +60,6 @@ export default {
 		this.initCalendarData()
 		this.createCalendar()
 		this.loadRecords(() => {
-			console.log(2)
 			this.doFilter({
 				answerArr: this.allRecords,
 				selectData: this.isSelectDate
@@ -112,6 +118,10 @@ export default {
 		returnToday () {
 			this.goTodaytDate()
 			this.createCalendar()
+			this.doFilter({
+				answerArr: this.allRecords,
+				selectData: this.isSelectDate}
+			)
 		},
 		isActiveCell (index) {
 			if (index === this.activCell) {
@@ -164,7 +174,6 @@ export default {
 			})
 			xhr.onreadystatechange = () => {
 				if (xhr.status === 200 && xhr.readyState === 4) {
-					console.log(1)
 					this.getAllRecords(JSON.parse(xhr.responseText))
 					callback()
 				}
@@ -188,7 +197,7 @@ export default {
 		...mapState('calendar', ['todayDate', 'selectDate', 'monthTitle']),
 		...mapState('winRecords', ['allRecords']),
 		...mapState('Select', ['listValue']),
-		...mapGetters('calendar', ['isSelectDate'])
+		...mapGetters('calendar', ['isSelectDate', 'isTodayDate'])
 	}
 }
 </script>
@@ -231,6 +240,24 @@ export default {
 	}
 	.cell--current-month {
 		opacity: 1;
+	}
+}
+.calendar__tpday-date {
+	text-align: center;
+	margin: 10px auto 0;
+	padding: 15px 0;
+	max-width: 150px;
+	border-radius: 5px;
+	transition: background-color .3s;
+	cursor: pointer;
+
+	span {
+		font-size: 1.2rem;
+		color: rgba(255,255,255, .7);
+	}
+
+	&:hover {
+		background-color: rgba(255,255,255, .1);
 	}
 }
 </style>

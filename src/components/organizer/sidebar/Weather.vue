@@ -51,8 +51,8 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-top: 25px;
-	padding: 15px;
+	margin: 5px auto;
+	padding: 0 10px;
 	color: rgba(255,255,255, .7);
 }
 .weather__icon {
