@@ -46,11 +46,6 @@ import PrioritySelect from '@/components/organizer/task-win/PrioritySelect'
 export default {
 	name: 'OrganizerTasksDay',
 	components: {TaskItem, PrioritySelect},
-	props: {
-		dataCalendar: {
-			type: Object
-		}
-	},
 	data () {
 		return {
 			newTaskTitle: '',
@@ -133,6 +128,7 @@ $focus-transition-timing: .3s;
 	width: 70%;
 	background-color: rgba(255,255,255, .1);
 	border-radius: 5px;
+	box-shadow: 0 0 15px rgba(0,0,0, .4);
 }
 .add-task__title,
 .add-task__decs {

@@ -52,7 +52,13 @@ export default {
 	created () {
 		this.initCalendarData()
 		this.createCalendar()
-		this.loadRecords()
+		this.loadRecords(() => {
+			console.log(2)
+			this.doFilter({
+				answerArr: this.allRecords,
+				selectData: this.isSelectDate
+			})
+		})
 	},
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
@@ -143,14 +149,16 @@ export default {
 			)
 			this.toggleFlag()
 		},
-		loadRecords () {
+		loadRecords (callback) {
 			const xhr = new XMLHttpRequest()
 			let formData = JSON.stringify({
 				test: 'test123'
 			})
 			xhr.onreadystatechange = () => {
 				if (xhr.status === 200 && xhr.readyState === 4) {
+					console.log(1)
 					this.getAllRecords(JSON.parse(xhr.responseText))
+					callback()
 				}
 			}
 			xhr.open('POST', 'http://localhost:9595/find-all-rec')

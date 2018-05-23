@@ -28,7 +28,6 @@ export default {
 			xhr.onreadystatechange = () => {
 				if (xhr.readyState === 4 && xhr.status === 200) {
 					this.weatherData = JSON.parse(xhr.responseText)
-					console.log(this.weatherData)
 				}
 			}
 			xhr.open('GET', 'http://api.openweathermap.org/data/2.5/weather?id=703448&units=metric&appid=d23141099f269b69643175e5ed4499b3')
