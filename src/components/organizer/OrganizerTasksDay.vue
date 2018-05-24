@@ -17,7 +17,7 @@
 			>
 			<label
 				:class="{'add-task__title--label-focus': titleLabelVisible}"
-				for="new-task-title">record title</label>
+				for="new-task-title">task title</label>
 		</div>
 		<div class="add-task__input-wrap">
 			<textarea
@@ -34,7 +34,7 @@
 		<priority-select />
 		<button
 			@click="sendRequest()"
-			class="add-task__btn">add record</button>
+			class="add-task__btn">add task</button>
 	</div>
 </div>
 </template>

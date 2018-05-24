@@ -18,10 +18,12 @@
 				@click="deleteRecord(recordingData._id)"
 				class="task-item__head-btn task-item__head-btn--remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
 	</div>
+	<transition name="slideUp">
 	<div
 		v-show="showDescription"
 		class="task-item__description"
 	>{{recordingData.desc}}</div>
+	</transition>
 	<!-- EditTask -->
 	<edit-task
 		@closeUp="toggleEditWin()"
