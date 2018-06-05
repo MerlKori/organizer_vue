@@ -1,17 +1,19 @@
 <template>
 <div id="app">
 	<!-- Organizer -->
-	<organizer />
+	<!-- <organizer /> -->
+	<authorization />
 	<app-background />
 </div>
 </template>
 
 <script>
 import AppBackground from '@/pages/AppBackground'
+import Authorization from '@/pages/Authorization'
 import Organizer from '@/pages/Organizer'
 export default {
 	name: 'App',
-	components: {AppBackground, Organizer}
+	components: {AppBackground, Organizer, Authorization}
 }
 </script>
 

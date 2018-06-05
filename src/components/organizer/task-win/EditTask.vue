@@ -81,6 +81,7 @@ export default {
 				}
 			}
 			xhr.open('POST', `${this.urlServer}update`)
+			xhr.setRequestHeader('Content-Type', 'application/json')
 			xhr.send(formData)
 		}
 	},

@@ -80,7 +80,8 @@ export default {
 					this.getAllRecords(JSON.parse(xhr.responseText))
 				}
 			}
-			xhr.open('POST', `${this.urlServer}rem-rec`)
+			xhr.open('POST', `${this.urlServer}remove`)
+			xhr.setRequestHeader('Content-Type', 'application/json')
 			xhr.send(formData)
 		}
 	},

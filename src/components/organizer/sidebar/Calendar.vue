@@ -178,7 +178,8 @@ export default {
 					callback()
 				}
 			}
-			xhr.open('POST', `${this.urlServer}find-all-rec`)
+			xhr.open('POST', `${this.urlServer}findAll`)
+			xhr.setRequestHeader('Content-Type', 'application/json')
 			xhr.send(formData)
 		},
 		showRecLow (id, elVal, priority) {

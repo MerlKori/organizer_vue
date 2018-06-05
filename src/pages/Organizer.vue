@@ -4,15 +4,18 @@
 	<organizer-sidebar />
 	<!-- OrganizerTasksDay -->
 	<organizer-tasks-day />
+	<!-- Preloader -->
+	<!-- <preloader /> -->
 </div>
 </template>
 
 <script>
 import OrganizerSidebar from '@/components/organizer/OrganizerSidebar'
 import OrganizerTasksDay from '@/components/organizer/OrganizerTasksDay'
+import Preloader from '@/components/organizer/Preloader'
 export default {
 	name: 'Organizer',
-	components: {OrganizerSidebar, OrganizerTasksDay},
+	components: {OrganizerSidebar, OrganizerTasksDay, Preloader},
 	data () {
 		return {}
 	}

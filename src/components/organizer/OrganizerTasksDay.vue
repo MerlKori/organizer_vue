@@ -76,6 +76,7 @@ export default {
 				}
 			}
 			xhr.open('POST', `${this.urlServer}created`)
+			xhr.setRequestHeader('Content-Type', 'application/json')
 			xhr.send(formData)
 			this.newTaskTitle = ''
 			this.newTaskDesc = ''
@@ -182,7 +183,7 @@ $focus-transition-timing: .3s;
 			top: - 60%;
 			font-size: .75rem;
 			color: $focus-color;
-		}
+	}
 }
 .add-task__decs {
 	height: 80px;
