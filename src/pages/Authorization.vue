@@ -43,6 +43,7 @@
 				</div>
 				<div class="form__btn-wrap">
 					<button
+						@click.prevent="sendRegistrationData()"
 						class="form__btn">sign up</button>
 				</div>
 			</form>
@@ -71,6 +72,7 @@
 				</div>
 				<div class="form__btn-wrap">
 					<button
+						@click="login()"
 						class="form__btn">login</button>
 				</div>
 			</form>
@@ -80,6 +82,8 @@
 </template>
 
 <script>
+import {mapState, mapMutations} from 'vuex'
+import axios from 'axios'
 export default {
 	name: 'Authorization',
 	data () {
@@ -96,13 +100,36 @@ export default {
 		}
 	},
 	methods: {
+		...mapMutations(['setKey']),
 		toogleState () {
 			this.autorizationState = !this.autorizationState
 		},
 		leLabelVisible (val) {
-			console.log(val !== '')
 			return val !== ''
+		},
+		sendRegistrationData () {
+			axios.post(`${this.urlServer}registration`, {
+				login: this.registration.login,
+				password: this.registration.password
+			})
+				.then((res) => {
+					console.log(res.data)
+				})
+				.catch(() => console.log('err'))
+		},
+		login () {
+			axios.post(`${this.urlServer}authentication`, {
+				login: this.authorization.login,
+				password: this.authorization.password
+			})
+				.then((res) => {
+					this.setKey(res.data)
+				})
+				.catch(() => console.log('err'))
 		}
+	},
+	computed: {
+		...mapState(['urlServer'])
 	}
 }
 </script>
@@ -263,30 +290,24 @@ $focus-transition-timing: .3s;
 /* ================================= Animations ======================================================= */
 @keyframes bounceLeft {
   0% {
-    -webkit-transform: translate3d(100%, -50%, 0);
-            transform: translate3d(100%, -50%, 0);
+	transform: translate3d(100%, -50%, 0);
   }
   50% {
-    -webkit-transform: translate3d(-30px, -50%, 0);
-            transform: translate3d(-30px, -50%, 0);
+	transform: translate3d(-30px, -50%, 0);
   }
   100% {
-    -webkit-transform: translate3d(0, -50%, 0);
-            transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0);
   }
 }
 @keyframes bounceRight {
   0% {
-    -webkit-transform: translate3d(0, -50%, 0);
-            transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0);
   }
   50% {
-    -webkit-transform: translate3d(calc(100% + 30px), -50%, 0);
-            transform: translate3d(calc(100% + 30px), -50%, 0);
+	transform: translate3d(calc(100% + 30px), -50%, 0);
   }
   100% {
-    -webkit-transform: translate3d(100%, -50%, 0);
-            transform: translate3d(100%, -50%, 0);
+	transform: translate3d(100%, -50%, 0);
   }
 }
 </style>

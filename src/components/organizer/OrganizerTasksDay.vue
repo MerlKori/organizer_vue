@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
 import TaskItem from '@/components/organizer/task-win/TaskItem.vue'
 import PrioritySelect from '@/components/organizer/task-win/PrioritySelect'
@@ -56,8 +57,29 @@ export default {
 		...mapActions('winRecords', ['doFilter']),
 		...mapMutations('winRecords', ['getAllRecords']),
 		sendRequest () {
-			const xhr = new XMLHttpRequest()
-			let formData = JSON.stringify({
+			// const xhr = new XMLHttpRequest()
+			// let formData = JSON.stringify({
+			// 	date: this.isSelectDate,
+			// 	title: this.newTaskTitle,
+			// 	desc: this.newTaskDesc,
+			// 	priority: {
+			// 		prVal: this.selectVal,
+			// 		prColor: this.colorTitle
+			// 	}
+			// })
+			// xhr.onreadystatechange = () => {
+			// 	if (xhr.readyState === 4) {
+			// 		this.doFilter({
+			// 			answerArr: JSON.parse(xhr.responseText),
+			// 			selectData: this.isSelectDate}
+			// 		)
+			// 		this.getAllRecords(JSON.parse(xhr.responseText))
+			// 	}
+			// }
+			// xhr.open('POST', `${this.urlServer}created`)
+			// xhr.setRequestHeader('Content-Type', 'application/json')
+			// xhr.send(formData)
+			axios.post(`${this.urlServer}registration`, {
 				date: this.isSelectDate,
 				title: this.newTaskTitle,
 				desc: this.newTaskDesc,
@@ -66,18 +88,15 @@ export default {
 					prColor: this.colorTitle
 				}
 			})
-			xhr.onreadystatechange = () => {
-				if (xhr.readyState === 4) {
+				.then((res) => {
+					console.log(res.data)
 					this.doFilter({
-						answerArr: JSON.parse(xhr.responseText),
+						answerArr: res.data,
 						selectData: this.isSelectDate}
 					)
-					this.getAllRecords(JSON.parse(xhr.responseText))
-				}
-			}
-			xhr.open('POST', `${this.urlServer}created`)
-			xhr.setRequestHeader('Content-Type', 'application/json')
-			xhr.send(formData)
+					this.getAllRecords(res.data)
+				})
+				.catch(() => console.log('err'))
 			this.newTaskTitle = ''
 			this.newTaskDesc = ''
 		}
