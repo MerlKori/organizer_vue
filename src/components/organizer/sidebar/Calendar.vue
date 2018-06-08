@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
 import CalendarHeader from '@/components/organizer/sidebar/CalendarHeader'
 import TaskLabels from '@/components/organizer/sidebar/TaskLabels'
@@ -59,7 +60,7 @@ export default {
 	created () {
 		this.initCalendarData()
 		this.createCalendar()
-		this.loadRecords(() => {
+		this.loadTasks(() => {
 			this.doFilter({
 				answerArr: this.allRecords,
 				selectData: this.isSelectDate
@@ -167,20 +168,15 @@ export default {
 			)
 			this.toggleFlag()
 		},
-		loadRecords (callback) {
-			const xhr = new XMLHttpRequest()
-			let formData = JSON.stringify({
-				test: 'test123'
+		loadTasks (callback) {
+			axios.post(`${this.urlServer}findAll`, {
+				key: this.accessKey
 			})
-			xhr.onreadystatechange = () => {
-				if (xhr.status === 200 && xhr.readyState === 4) {
-					this.getAllRecords(JSON.parse(xhr.responseText))
+				.then((res) => {
+					this.getAllRecords(res.data)
 					callback()
-				}
-			}
-			xhr.open('POST', `${this.urlServer}findAll`)
-			xhr.setRequestHeader('Content-Type', 'application/json')
-			xhr.send(formData)
+				})
+				.catch(() => console.log('err'))
 		},
 		showRecLow (id, elVal, priority) {
 			if ((id > this.visibleDaysPrewMonth()) && (id <= this.sumDaysPrewCurrentMonth())) {
@@ -196,6 +192,7 @@ export default {
 	},
 	computed: {
 		...mapState(['urlServer']),
+		...mapState('accessPoint', ['accessKey']),
 		...mapState('calendar', ['todayDate', 'selectDate', 'monthTitle']),
 		...mapState('winRecords', ['allRecords']),
 		...mapState('Select', ['listValue']),

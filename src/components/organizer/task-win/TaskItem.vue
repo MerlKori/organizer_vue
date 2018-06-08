@@ -15,7 +15,7 @@
 			@click="toggleEditWin()"
 			class="task-item__head-btn task-item__head-btn--edit"><img src="../../../assets/images/edit.png" alt="edit"></button>
 		<button
-				@click="deleteRecord(recordingData._id)"
+				@click="deleteTask(recordingData._id)"
 				class="task-item__head-btn task-item__head-btn--remove"><img src="../../../assets/images/delete.png" alt="delete"></button>
 	</div>
 	<transition name="slideUp">
@@ -33,8 +33,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 import EditTask from '@/components/organizer/task-win/EditTask'
-import {mapGetters, mapActions, mapMutations, mapState} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
 	name: 'TaskItem',
 	components: {EditTask},
@@ -66,27 +67,26 @@ export default {
 		toggleEditWin () {
 			this.showEditWin = !this.showEditWin
 		},
-		deleteRecord (id) {
-			const xhr = new XMLHttpRequest()
-			let formData = JSON.stringify({
-				_id: id
+		deleteTask (id) {
+			console.log(id)
+			console.log(this.accessKey)
+			axios.post(`${this.urlServer}remove`, {
+				_id: id,
+				key: this.accessKey
 			})
-			xhr.onreadystatechange = () => {
-				if (xhr.status === 200 && xhr.readyState === 4) {
+				.then((res) => {
 					this.doFilter({
-						answerArr: JSON.parse(xhr.responseText),
+						answerArr: res.data,
 						selectData: this.isSelectDate}
 					)
-					this.getAllRecords(JSON.parse(xhr.responseText))
-				}
-			}
-			xhr.open('POST', `${this.urlServer}remove`)
-			xhr.setRequestHeader('Content-Type', 'application/json')
-			xhr.send(formData)
+					this.getAllRecords(res.data)
+				})
+				.catch(() => console.log('err'))
 		}
 	},
 	computed: {
 		...mapState(['urlServer']),
+		...mapState('accessPoint', ['accessKey']),
 		...mapGetters('calendar', ['isSelectDate']),
 		...mapState('winRecords', ['flagTaskItem']),
 		isActive () {

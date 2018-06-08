@@ -33,7 +33,7 @@
 		<!-- PrioritySelect -->
 		<priority-select />
 		<button
-			@click="sendRequest()"
+			@click="createTask()"
 			class="add-task__btn">add task</button>
 	</div>
 </div>
@@ -56,29 +56,7 @@ export default {
 	methods: {
 		...mapActions('winRecords', ['doFilter']),
 		...mapMutations('winRecords', ['getAllRecords']),
-		sendRequest () {
-			// const xhr = new XMLHttpRequest()
-			// let formData = JSON.stringify({
-			// 	date: this.isSelectDate,
-			// 	title: this.newTaskTitle,
-			// 	desc: this.newTaskDesc,
-			// 	priority: {
-			// 		prVal: this.selectVal,
-			// 		prColor: this.colorTitle
-			// 	}
-			// })
-			// xhr.onreadystatechange = () => {
-			// 	if (xhr.readyState === 4) {
-			// 		this.doFilter({
-			// 			answerArr: JSON.parse(xhr.responseText),
-			// 			selectData: this.isSelectDate}
-			// 		)
-			// 		this.getAllRecords(JSON.parse(xhr.responseText))
-			// 	}
-			// }
-			// xhr.open('POST', `${this.urlServer}created`)
-			// xhr.setRequestHeader('Content-Type', 'application/json')
-			// xhr.send(formData)
+		createTask () {
 			axios.post(`${this.urlServer}created`, {
 				date: this.isSelectDate,
 				title: this.newTaskTitle,
@@ -86,10 +64,10 @@ export default {
 				priority: {
 					prVal: this.selectVal,
 					prColor: this.colorTitle
-				}
+				},
+				key: this.accessKey
 			})
 				.then((res) => {
-					console.log(res.data)
 					this.doFilter({
 						answerArr: res.data,
 						selectData: this.isSelectDate}
@@ -103,6 +81,7 @@ export default {
 	},
 	computed: {
 		...mapState(['urlServer']),
+		...mapState('accessPoint', ['accessKey']),
 		...mapState('winRecords', ['eventsDataList']),
 		...mapState('Select', ['selectVal', 'colorTitle']),
 		...mapGetters('calendar', ['isSelectDate']),

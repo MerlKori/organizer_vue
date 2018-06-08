@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
 import OrganizerSidebar from '@/components/organizer/OrganizerSidebar'
 import OrganizerTasksDay from '@/components/organizer/OrganizerTasksDay'
 import Preloader from '@/components/organizer/Preloader'
@@ -18,6 +19,12 @@ export default {
 	components: {OrganizerSidebar, OrganizerTasksDay, Preloader},
 	data () {
 		return {}
+	},
+	created () {
+		this.setKey(localStorage.getItem('id'))
+	},
+	methods: {
+		...mapMutations('accessPoint', ['setKey'])
 	}
 }
 </script>

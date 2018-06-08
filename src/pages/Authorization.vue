@@ -46,7 +46,7 @@
 					</div>
 					<div class="form__btn-wrap">
 						<button
-							@click.prevent="sregistrationRequest()"
+							@click.prevent="createUser()"
 							class="form__btn">sign up</button>
 					</div>
 				</form>
@@ -116,7 +116,7 @@ export default {
 		leLabelVisible (val) {
 			return val !== ''
 		},
-		sregistrationRequest () {
+		createUser () {
 			axios.post(`${this.urlServer}registration`, {
 				login: this.registration.login,
 				password: this.registration.password

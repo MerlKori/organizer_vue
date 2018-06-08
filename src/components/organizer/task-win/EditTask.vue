@@ -14,7 +14,7 @@
 			<priority-select />
 			<div class="edit__btns-wrap">
 				<button
-					@click="editRec(editData._id)"
+					@click="editTask(editData._id)"
 					class="edit__btns send-edit">Edit</button>
 				<button
 						@click="closeWin()"
@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState, mapMutations} from 'vuex'
+import axios from 'axios'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import PrioritySelect from '@/components/organizer/task-win/PrioritySelect'
 export default {
 	name: 'EditTask',
@@ -54,10 +55,9 @@ export default {
 		closeWin () {
 			this.$emit('closeUp')
 		},
-		editRec (id) {
-			const xhr = new XMLHttpRequest()
-			let formData = JSON.stringify([
-				{
+		editTask (id) {
+			axios.post(`${this.urlServer}update`, {
+				changeData: [{
 					_id: id
 				},
 				{
@@ -68,25 +68,23 @@ export default {
 						prVal: this.selectVal,
 						prColor: this.colorTitle
 					}
-				}
-			])
-			xhr.onreadystatechange = () => {
-				if (xhr.status === 200 && xhr.readyState === 4) {
+				}],
+				key: {key: this.accessKey}
+			})
+				.then((res) => {
 					this.doFilter({
-						answerArr: JSON.parse(xhr.responseText),
+						answerArr: res.data,
 						selectData: this.isSelectDate}
 					)
-					this.getAllRecords(JSON.parse(xhr.responseText))
+					this.getAllRecords(res.data)
 					this.closeWin()
-				}
-			}
-			xhr.open('POST', `${this.urlServer}update`)
-			xhr.setRequestHeader('Content-Type', 'application/json')
-			xhr.send(formData)
+				})
+				.catch(() => console.log('err'))
 		}
 	},
 	computed: {
 		...mapState(['urlServer']),
+		...mapState('accessPoint', ['accessKey']),
 		...mapGetters('calendar', ['isSelectDate']),
 		...mapState('winRecords', ['editWinVisible']),
 		...mapState('Select', ['selectVal', 'colorTitle'])
