@@ -79,7 +79,7 @@ export default {
 			// xhr.open('POST', `${this.urlServer}created`)
 			// xhr.setRequestHeader('Content-Type', 'application/json')
 			// xhr.send(formData)
-			axios.post(`${this.urlServer}registration`, {
+			axios.post(`${this.urlServer}created`, {
 				date: this.isSelectDate,
 				title: this.newTaskTitle,
 				desc: this.newTaskDesc,

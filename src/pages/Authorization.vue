@@ -1,93 +1,101 @@
 <template>
-<div class="authorization">
-	<div class="authorization__state-desc">
-		<div class="authorization__block">
-			<h2 class="authorization__title">Don't have an account?</h2>
-			<p class="authorization__text">It's not scary, all you need is to come up with a username and password.</p>
-			<button
-				@click="toogleState"
-				class="authorization__btn">Sign up</button>
-		</div>
-		<div class="authorization__block">
-			<h2 class="authorization__title">Have an account?</h2>
-			<p class="authorization__text">Ok, enter and continue.</p>
-			<button
-				@click="toogleState"
-				class="authorization__btn">Login</button>
-		</div>
-	</div>
-	<div
-		:class="{'authorization__form--login': !autorizationState, 'authorization__form--registr': autorizationState}"
-		class="authorization__form">
-		<div
-			v-if="!autorizationState"
-			:key="1"
-			class="form__wrap">
-			<h2 class="forms_title">sign up</h2>
-			<form class="form__sing-up">
-				<div class="form__input-wrap">
-					<input
-						v-model="registration.login"
-						type="text"
-						name="login">
-					<label :class="{'label-focus': leLabelVisible(registration.login)}">login</label>
-					<span class="form__msg-error"></span>
-				</div>
-				<div class="form__input-wrap">
-					<input
-						v-model="registration.password"
-						type="password"
-						name="password">
-					<label :class="{'label-focus': leLabelVisible(registration.password)}">password</label>
-					<span class="form__msg-error"></span>
-				</div>
-				<div class="form__btn-wrap">
-					<button
-						@click.prevent="sendRegistrationData()"
-						class="form__btn">sign up</button>
-				</div>
-			</form>
+<div>
+	<!-- MsgAutorizationError -->
+	<msg-autorization-error />
+	<div class="authorization">
+		<div class="authorization__state-desc">
+			<div class="authorization__block">
+				<h2 class="authorization__title">Don't have an account?</h2>
+				<p class="authorization__text">It's not scary, all you need is to come up with a username and password.</p>
+				<button
+					@click="toogleState"
+					class="authorization__btn">Sign up</button>
+			</div>
+			<div class="authorization__block">
+				<h2 class="authorization__title">Have an account?</h2>
+				<p class="authorization__text">Ok, enter and continue.</p>
+				<button
+					@click="toogleState"
+					class="authorization__btn">Login</button>
+			</div>
 		</div>
 		<div
-			v-else-if="autorizationState"
-			:key="2"
-			class="form__wrap">
-			<h2 class="forms_title">Login</h2>
-			<form class="form__login">
-				<div class="form__input-wrap">
-					<input
-						v-model="authorization.login"
-						type="text"
-						name="login">
-					<label :class="{'label-focus': leLabelVisible(authorization.login)}">login</label>
-					<span class="form__msg-error"></span>
-				</div>
-				<div class="form__input-wrap">
-					<input
-						v-model="authorization.password"
-						type="password"
-						name="password">
-					<label :class="{'label-focus': leLabelVisible(authorization.password)}">password</label>
-					<span class="form__msg-error"></span>
-				</div>
-				<div class="form__btn-wrap">
-					<button
-						@click="login()"
-						class="form__btn">login</button>
-				</div>
-			</form>
+			:class="{'authorization__form--login': !autorizationState, 'authorization__form--registr': autorizationState}"
+			class="authorization__form">
+			<div
+				v-if="!autorizationState"
+				:key="1"
+				class="form__wrap">
+				<h2 class="forms_title">sign up</h2>
+				<form class="form__sing-up">
+					<div class="form__input-wrap">
+						<input
+							v-model="registration.login"
+							type="text"
+							name="login">
+						<label :class="{'label-focus': leLabelVisible(registration.login)}">login</label>
+						<span class="form__msg-error"></span>
+					</div>
+					<div class="form__input-wrap">
+						<input
+							v-model="registration.password"
+							type="password"
+							name="password">
+						<label :class="{'label-focus': leLabelVisible(registration.password)}">password</label>
+						<span class="form__msg-error"></span>
+					</div>
+					<div class="form__btn-wrap">
+						<button
+							@click.prevent="sregistrationRequest()"
+							class="form__btn">sign up</button>
+					</div>
+				</form>
+			</div>
+			<div
+				v-else-if="autorizationState"
+				:key="2"
+				class="form__wrap">
+				<h2 class="forms_title">Login</h2>
+				<form class="form__login">
+					<div class="form__input-wrap">
+						<input
+							v-model="authorization.login"
+							type="text"
+							name="login">
+						<label :class="{'label-focus': leLabelVisible(authorization.login)}">login</label>
+						<span class="form__msg-error"></span>
+					</div>
+					<div class="form__input-wrap">
+						<input
+							v-model="authorization.password"
+							type="password"
+							name="password">
+						<label :class="{'label-focus': leLabelVisible(authorization.password)}">password</label>
+						<span class="form__msg-error"></span>
+					</div>
+					<div class="form__btn-wrap">
+						<button
+							@click.prevent="login()"
+							class="form__btn">login</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>
 </template>
 
 <script>
+import {routesList} from '@/router/router'
 import {mapState, mapMutations} from 'vuex'
+import MsgAutorizationError from '@/components/MsgAutorizationError'
 import axios from 'axios'
 export default {
 	name: 'Authorization',
+	components: {MsgAutorizationError},
 	data () {
 		return {
+			routesList,
 			autorizationState: true,
 			authorization: {
 				login: '',
@@ -100,20 +108,26 @@ export default {
 		}
 	},
 	methods: {
-		...mapMutations(['setKey']),
+		...mapMutations('accessPoint', ['setKey']),
+		...mapMutations('msgError', ['showMsgError']),
 		toogleState () {
 			this.autorizationState = !this.autorizationState
 		},
 		leLabelVisible (val) {
 			return val !== ''
 		},
-		sendRegistrationData () {
+		sregistrationRequest () {
 			axios.post(`${this.urlServer}registration`, {
 				login: this.registration.login,
 				password: this.registration.password
 			})
 				.then((res) => {
-					console.log(res.data)
+					if (res.data !== 'error') {
+						this.setKey(res.data)
+						this.$router.push(this.routesList.organizer)
+					} else {
+						this.showMsgError('a user with that name already exists')
+					}
 				})
 				.catch(() => console.log('err'))
 		},
@@ -123,7 +137,12 @@ export default {
 				password: this.authorization.password
 			})
 				.then((res) => {
-					this.setKey(res.data)
+					if (res.data !== 'error') {
+						this.setKey(res.data)
+						this.$router.push(this.routesList.organizer)
+					} else {
+						this.showMsgError('user with this name is not found')
+					}
 				})
 				.catch(() => console.log('err'))
 		}
